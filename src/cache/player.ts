@@ -3,8 +3,8 @@ import { client } from '..';
 import { Client } from 'discord.js';
 
 const player = new Player(client as unknown as Client, {
-    ytdlOptions: {quality: 'highestaudio', filter: 'audioonly'}
+    ytdlOptions: { quality: 'highestaudio', filter: 'audioonly' }
 });
 
 player.extractors.loadDefault();
-export default player
+export default player;

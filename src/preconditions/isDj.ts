@@ -41,7 +41,7 @@ export default new Precondition('is DJ').setChatInputRun(({ interaction }) => {
             ok: true,
             interaction,
             type: 'chatInput'
-        }
+        };
     }
     if (condition === 'djonly') {
         if (!dj()) return dj() as preconditionRunReturn;

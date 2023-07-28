@@ -1,4 +1,4 @@
-import { ButtonStyle } from "discord.js";
+import { ButtonStyle } from 'discord.js';
 
 export type buttonOptions = {
     label?: string;
@@ -8,7 +8,7 @@ export type buttonOptions = {
     disabled?: boolean;
     url?: string;
     emoji?: string;
-}
+};
 export enum ButtonIds {
     Yes = 'yes',
     No = 'no'
