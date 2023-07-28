@@ -11,6 +11,7 @@ export const client = new AmethystClient(
         commandsFolder: './dist/commands',
         eventsFolder: './dist/events',
         preconditionsFolder: './dist/preconditions',
+        autocompleteListenersFolder: './dist/autocompletes',
         debug: true
     }
 );

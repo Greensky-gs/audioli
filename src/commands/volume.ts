@@ -1,4 +1,4 @@
-import { AmethystCommand, log4js } from "amethystjs";
+import { AmethystCommand, log4js, preconditions } from "amethystjs";
 import { ApplicationCommandOptionType } from "discord.js";
 import playing from "../preconditions/playing";
 import isDj from "../preconditions/isDj";
@@ -16,7 +16,7 @@ export default new AmethystCommand({
             maxValue: 100
         }
     ],
-    preconditions: [playing, isDj]
+    preconditions: [preconditions.GuildOnly, playing, isDj]
 }).setChatInputRun(async({ interaction, options }) => {
     const volume = options.getInteger('volume')
     player.nodes.get(interaction.guild)?.node?.setVolume(volume);

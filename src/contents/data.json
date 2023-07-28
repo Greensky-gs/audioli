@@ -40,6 +40,22 @@
                     "description": "Tout le monde peut gérer la musique"
                 }
             ]
+        },
+        "autoSelect": {
+            "id": "autoSelect",
+            "name": "Sélection automatique",
+            "description": "La première musique sera automatiquement sélectionnée lors du choix d'une musique",
+            "default": true,
+            "type": "boolean"
+        },
+        "volume": {
+            "id": "volume",
+            "name": "Volume par défaut",
+            "description": "Le volume par défaut du serveur",
+            "type": "number",
+            "default": 70,
+            "max": 100,
+            "min": 1
         }
     },
     "configTypes": {

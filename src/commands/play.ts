@@ -4,6 +4,9 @@ import { ApplicationCommandOptionType, ChannelType, ComponentType, GuildMember, 
 import { cancel, multipleTracks, noTracks, noVoiceChannel, play } from '../contents/embeds';
 import player from '../cache/player';
 import { row } from '../utils/toolbox';
+import configs from '../cache/configs';
+import { Track } from 'discord-player';
+import { compareTwoStrings } from 'string-similarity';
 
 export default new AmethystCommand({
     name: 'jouer',
@@ -17,15 +20,39 @@ export default new AmethystCommand({
             required: true
         },
         {
+            name: 'auteur',
+            description: "Auteur de la musique",
+            type: ApplicationCommandOptionType.String,
+            required: false
+        },
+        {
             name: 'salon',
             description: 'Salon dans lequel vous voulez que je joue de la musique',
             required: false,
             type: ApplicationCommandOptionType.Channel,
             channelTypes: [ChannelType.GuildVoice]
+        },
+        {
+            name: 'sélection',
+            description: "Vous laisse faire la sélection si elle doit se faire",
+            type: ApplicationCommandOptionType.String,
+            required: false,
+            choices: [
+                {
+                    name: 'Sélection automatique',
+                    value: 'auto'
+                },
+                {
+                    name: 'Sélection manuelle',
+                    value: 'user'
+                }
+            ]
         }
     ]
 }).setChatInputRun(async ({ interaction, client, options }) => {
     const musicSearch = options.getString('musique');
+    const author = options.getString('auteur');
+    const autoSelect = options.getString('sélection') === 'auto';
     const channel =
         (interaction?.member as GuildMember)?.voice?.channel ??
         (options.getChannel('salon') as VoiceChannel) ??
@@ -47,7 +74,18 @@ export default new AmethystCommand({
     }).catch(log4js.trace)
     
     let choice = res.tracks[0];
-    if (res.tracks.length > 1) {
+    const auto = autoSelect ?? configs.getconfig(interaction.guild.id, 'autoSelect');
+    if (auto && res.tracks.length > 1) {
+        const values = {};
+        res.tracks.forEach((x: Track) => {
+            values[x.id] = {
+                titleRate: compareTwoStrings(musicSearch, x.title),
+                authorRate: author ? compareTwoStrings(author, x.author) : 1
+            }
+        });
+        choice = res.tracks.sort((a, b) => (values[b.id].authorRate + values[b.id].titleRate) - (values[a.id].authorRate + values[b.id].titleRate))[0];
+    }
+    if (res.tracks.length > 1 && !configs.getconfig(interaction.guild.id, 'autoSelect')) {
         await interaction.editReply({
             embeds: [ multipleTracks(interaction.user) ],
             components: [row(new StringSelectMenuBuilder()
@@ -80,7 +118,7 @@ export default new AmethystCommand({
     } else {
         player.play(channel as VoiceChannel, choice, {
             nodeOptions: {
-                volume: 85,
+                volume: configs.getconfig(interaction.guild.id, 'volume'),
                 leaveOnEmpty: true,
                 leaveOnEmptyCooldown: 120000,
                 leaveOnEnd: false,

@@ -28,8 +28,8 @@ export class ConfigsManager {
     public getConfigs(guild: string) {
         return this._cache.get(guild) ?? { ...this.defaultConfigs, guild_id: guild };
     }
-    public getconfig(guild: string, config: configKey) {
-        return this.getConfigs(guild)[config];
+    public getconfig<Key extends configKey>(guild: string, config: Key): typeof configsData[Key]['default'] {
+        return this.getConfigs(guild)[config] as typeof configsData[Key]['default'];
     }
     public setConfig<Key extends configKey>(guild: string, config: Key, value: (typeof configsData)[Key]['default']) {
         const confs = this.getConfigs(guild);
