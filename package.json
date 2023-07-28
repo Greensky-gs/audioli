@@ -16,7 +16,8 @@
   "scripts": {
     "build": "yarn tsc -b",
     "start": "node .",
-    "launch": "yarn install && yarn build && yarn start"
+    "launch": "yarn install && yarn build && yarn start",
+    "prettier": "prettier -w src"
   },
   "devDependencies": {
     "prettier": "^3.0.0"
