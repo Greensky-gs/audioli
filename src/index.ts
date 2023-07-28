@@ -4,7 +4,7 @@ config();
 
 export const client = new AmethystClient(
     {
-        intents: ['Guilds']
+        intents: ['Guilds', 'GuildVoiceStates']
     },
     {
         token: process.env.token,

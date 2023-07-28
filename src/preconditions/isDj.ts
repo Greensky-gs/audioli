@@ -36,6 +36,13 @@ export default new Precondition('is DJ').setChatInputRun(({ interaction }) => {
                 }
             };
     };
+    if (condition === 'everyone') {
+        return {
+            ok: true,
+            interaction,
+            type: 'chatInput'
+        }
+    }
     if (condition === 'djonly') {
         if (!dj()) return dj() as preconditionRunReturn;
     } else if (condition === 'adminsonly') {

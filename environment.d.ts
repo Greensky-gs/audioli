@@ -6,6 +6,7 @@ declare global {
             db_u: string;
             db: string;
             db_p: string;
+            panel: string;
         }
     }
 }

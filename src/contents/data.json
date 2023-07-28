@@ -1,7 +1,9 @@
 {
     "colors": {
         "accent": "#543B48",
-        "denied": "#D5070F"
+        "denied": "#D5070F",
+        "question": "#7FB3CF",
+        "cancel": "#563A8C"
     },
     "links": {
         "invite": "https://bit.ly/3OekMKv",
@@ -31,6 +33,11 @@
                     "name": "DJ et administrateurs",
                     "value": "both",
                     "description": "Administrateurs et DJ"
+                },
+                {
+                    "name": "Tout le monde",
+                    "value": "everyone",
+                    "description": "Tout le monde peut gérer la musique"
                 }
             ]
         }
