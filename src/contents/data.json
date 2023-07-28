@@ -1,75 +1,75 @@
 {
-    "colors": {
-        "accent": "#543B48",
-        "denied": "#D5070F"
-    },
-    "links": {
-        "invite": "https://bit.ly/3OekMKv",
-        "email": "draver.industries@proton.me",
-        "instagram": "https://instagram.com/draverindustries",
-        "support": "https://discord.gg/Qt9Ns3uvYe"
-    },
-    "configs": {
-        "djallow": {
-            "id": "djallow",
-            "name": "Autorisation de DJ",
-            "description": "Fait en sorte que seul les DJ peuvent gérer la musique",
-            "type": "customstring",
-            "default": "djonly",
-            "states": [
-                {
-                    "name": "DJ seulement",
-                    "value": "djonly",
-                    "description": "Uniquement les DJ"
-                },
-                {
-                    "name": "Admininistrateurs seulement",
-                    "value": "adminsonly",
-                    "description": "Uniquement les administrateurs"
-                },
-                {
-                    "name": "DJ et administrateurs",
-                    "value": "both",
-                    "description": "Administrateurs et DJ"
-                }
-            ]
+  "colors": {
+    "accent": "#543B48",
+    "denied": "#D5070F"
+  },
+  "links": {
+    "invite": "https://bit.ly/3OekMKv",
+    "email": "draver.industries@proton.me",
+    "instagram": "https://instagram.com/draverindustries",
+    "support": "https://discord.gg/Qt9Ns3uvYe"
+  },
+  "configs": {
+    "djallow": {
+      "id": "djallow",
+      "name": "Autorisation de DJ",
+      "description": "Fait en sorte que seul les DJ peuvent gérer la musique",
+      "type": "customstring",
+      "default": "djonly",
+      "states": [
+        {
+          "name": "DJ seulement",
+          "value": "djonly",
+          "description": "Uniquement les DJ"
+        },
+        {
+          "name": "Admininistrateurs seulement",
+          "value": "adminsonly",
+          "description": "Uniquement les administrateurs"
+        },
+        {
+          "name": "DJ et administrateurs",
+          "value": "both",
+          "description": "Administrateurs et DJ"
         }
-    },
-    "configTypes": {
-        "customstring": {
-            "name": "Choix",
-            "value": "customstring",
-            "id": 1
-        },
-        "string": {
-            "name": "Texte",
-            "value": "string",
-            "id": 2
-        },
-        "role": {
-            "name": "Rôle",
-            "value": "role",
-            "id": 3
-        },
-        "channel": {
-            "name": "Salon",
-            "value": "channel",
-            "id": 4
-        },
-        "time": {
-            "name": "Durée",
-            "value": "time",
-            "id": 5
-        },
-        "boolean": {
-            "name": "Booléen",
-            "value": "boolean",
-            "id": 6
-        },
-        "number": {
-            "name": "Nombre",
-            "value": "number",
-            "id": 7
-        }
+      ]
     }
+  },
+  "configTypes": {
+    "customstring": {
+      "name": "Choix",
+      "value": "customstring",
+      "id": 1
+    },
+    "string": {
+      "name": "Texte",
+      "value": "string",
+      "id": 2
+    },
+    "role": {
+      "name": "Rôle",
+      "value": "role",
+      "id": 3
+    },
+    "channel": {
+      "name": "Salon",
+      "value": "channel",
+      "id": 4
+    },
+    "time": {
+      "name": "Durée",
+      "value": "time",
+      "id": 5
+    },
+    "boolean": {
+      "name": "Booléen",
+      "value": "boolean",
+      "id": 6
+    },
+    "number": {
+      "name": "Nombre",
+      "value": "number",
+      "id": 7
+    }
+  }
 }

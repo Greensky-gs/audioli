@@ -1,15 +1,18 @@
 import { AmethystClient } from "amethystjs";
 import { config } from "dotenv";
-config()
+config();
 
-export const client = new AmethystClient({
-    intents: ['Guilds']
-}, {
+export const client = new AmethystClient(
+  {
+    intents: ["Guilds"],
+  },
+  {
     token: process.env.token,
-    commandsFolder: './dist/commands',
-    eventsFolder: './dist/events',
-    preconditionsFolder: './dist/preconditions',
-    debug: true
-});
+    commandsFolder: "./dist/commands",
+    eventsFolder: "./dist/events",
+    preconditionsFolder: "./dist/preconditions",
+    debug: true,
+  },
+);
 
-client.start({})
+client.start({});
