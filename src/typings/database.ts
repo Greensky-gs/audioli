@@ -26,11 +26,11 @@ export type configs<Raw extends boolean = false> = {
 } & Record<configKey, string | If<Raw, string, number> | If<Raw, string, boolean>>;
 export type playlists<Raw extends boolean = false> = {
     user_id: string;
-    songs: If<Raw, string, {id: string; title: string;}[]>;
+    songs: If<Raw, string, { id: string; title: string }[]>;
     name: string;
     id: number;
     shared_with: If<Raw, string, string[]>;
     public: If<Raw, string, boolean>;
     emoji: string;
-}
+};
 export type dbBoolRes<Input extends string | number | boolean> = Input extends boolean ? '1' | '0' : boolean;

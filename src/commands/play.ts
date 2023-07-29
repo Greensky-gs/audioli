@@ -90,7 +90,9 @@ export default new AmethystCommand({
             .catch(log4js.trace);
 
     let choice = res.tracks[0];
-    const auto = (autoSelectOption ? autoSelectOption === 'auto' : undefined) ?? configs.getconfig(interaction.guild.id, 'autoSelect');
+    const auto =
+        (autoSelectOption ? autoSelectOption === 'auto' : undefined) ??
+        configs.getconfig(interaction.guild.id, 'autoSelect');
 
     if (auto && res.tracks.length > 1) {
         const values = {};
@@ -116,13 +118,11 @@ export default new AmethystCommand({
                             .setMaxValues(1)
                             .setPlaceholder('Choisissez une musique')
                             .setOptions(
-                                res.tracks
-                                    .slice(0, 24)
-                                    .map((tr) => ({
-                                        label: tr.title,
-                                        description: tr.author ?? 'Auteur inconnu',
-                                        value: tr.id
-                                    }))
+                                res.tracks.slice(0, 24).map((tr) => ({
+                                    label: tr.title,
+                                    description: tr.author ?? 'Auteur inconnu',
+                                    value: tr.id
+                                }))
                             )
                     )
                 ]

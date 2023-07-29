@@ -73,7 +73,7 @@ export default new AmethystCommand({
         },
         {
             name: 'mélanger',
-            description: "Mélange la liste de lecture",
+            description: 'Mélange la liste de lecture',
             type: ApplicationCommandOptionType.Subcommand
         }
     ]
@@ -82,11 +82,13 @@ export default new AmethystCommand({
     const node = player.nodes.get(interaction.guild);
 
     if (cmd === 'mélanger') {
-        node.tracks.shuffle()
-        
-        interaction.reply({
-            embeds: [shuffled(interaction.user)]
-        }).catch(log4js.trace)
+        node.tracks.shuffle();
+
+        interaction
+            .reply({
+                embeds: [shuffled(interaction.user)]
+            })
+            .catch(log4js.trace);
     }
     if (cmd === 'déplacer') {
         const selected = options.getString('musique');

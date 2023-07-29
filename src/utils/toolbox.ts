@@ -99,6 +99,7 @@ export const resize = (str: string, size = 4096) => {
     return str.slice(0, size - 3) + '...';
 };
 export const getNode = (node: NodeResolvable | BaseInteraction) => {
-    return player.nodes.get(node instanceof BaseInteraction ? node.guild : node)
-}
-export const pingUser = (user: userPingResolvable) => typeof user === 'string' ? `<@${user}>` : `<@${user instanceof User ? user.id : user?.user?.id}>`
+    return player.nodes.get(node instanceof BaseInteraction ? node.guild : node);
+};
+export const pingUser = (user: userPingResolvable) =>
+    typeof user === 'string' ? `<@${user}>` : `<@${user instanceof User ? user.id : user?.user?.id}>`;

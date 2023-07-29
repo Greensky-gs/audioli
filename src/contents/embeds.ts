@@ -24,7 +24,8 @@ const basic = (
         text: !!(options?.footerText ?? 'user') ? user.username : user.client.user.username
     });
 
-    if (!!options?.accentColor) embed.setColor(color(user.client.user.username.includes('Dev') ? 'beta_accent' : 'accent'));
+    if (!!options?.accentColor)
+        embed.setColor(color(user.client.user.username.includes('Dev') ? 'beta_accent' : 'accent'));
     if (!!options?.denied) embed.setColor(color('denied'));
     if (!!options?.question) embed.setColor(color('question'));
 
@@ -121,30 +122,101 @@ export const moved = (user: User, track: Track) =>
     basic(user, { accentColor: true })
         .setTitle('Musique déplacée')
         .setDescription(`La musique **${track.title}** a été déplacée`);
-export const shuffled = (user: User) => basic(user, { accentColor: true }).setTitle("Playlist mélangée").setDescription(`La liste de lecture a été mélangée`)
-export const paused = (user: User) => basic(user,  {  accentColor: true}).setTitle("Pause").setDescription(`La musique a été mise en pause`)
-export const resumed = (user: User) => basic(user,  { accentColor: true }).setTitle("Lecture").setDescription(`La musique a été remise en lecture`)
-export const notPaused = (user: User) => basic(user, { denied: true }).setTitle("Musique en lecture").setDescription(`La musique n'est pas en pause`)
-export const playlistAlreadyExists = (user: User, playlist: string) => basic(user, { denied: true }).setTitle("Playlist existante").setDescription(`Vous avez déjà une playlist du même nom`)
-export const unexistingPlaylist = (user: User, playlist?: string) => basic(user, { denied: true }).setTitle("Playlist inexistante").setDescription(`La playlist${playlist ? ` **${playlist}**`:''} n'existe pas`)
-export const alreadyAdded = (user: User) => basic(user, { denied: true }).setTitle("Musique déjà ajoutée").setDescription(`Cette musique est déjà dans la playlist`)
-export const songAdded = (user: User, track: Track) => basic(user, { accentColor: true }).setTitle("Musique ajoutée").setDescription(`La musique **${track.title}** a été ajoutée dans la playlist`)
-export const songRemoved = (user: User) => basic(user, { accentColor: true }).setTitle("Musique retirée").setDescription(`La musique a été retirée de la playlist`)
-export const sharedWith = (user: User, target: userPingResolvable) => basic(user, { accentColor: true }).setTitle("Playlist partagée").setDescription(`La playlist a été partagée avec ${pingUser(target)}`)
-export const unshared = (user: User, target: userPingResolvable) => basic(user, { accentColor: true }).setTitle("Playlist départagée").setDescription(`Vous ne partagez plus la playlist à ${pingUser(target)}`)
-export const totalyUnshared = (user: User) => basic(user, { accentColor: true }).setTitle("Playlist privée").setDescription(`Plus personne n'a accès à la playlist`)
-export const visibility = (user: User, visible: 'public' | 'private') => basic(user, { accentColor: true }).setTitle(`Playlist ${visible === 'private' ? 'privée' : 'publique'}`).setDescription(`Votre playlist est maintenant **${visible === 'private' ? 'privée': 'publique'}**`)
-export const deleted = (user: User, playlistName: string) => basic(user, { accentColor: true }).setTitle("Playlist supprimée").setDescription(`La playlist **${playlistName}** a été supprimée`)
-export const created = (user: User, name: string) => basic(user, { accentColor: true }).setTitle("Playlist créee").setDescription(`Vous avez crée la playlist **${name}**`)
-export const invalidEmoji = (user: User) => basic(user, { denied: true }).setTitle('Émoji invalide')
-.setDescription(
-    `Ce n'est pas un émoji valide.\nVeuillez envoyer un émoji correct, et assurez-vous que je puisse accéder à cet émoji`
-)
-export const wait = (user: User) => basic(user).setTitle("Patientez").setDescription(`Veuillez patienter quelques instants...`).setColor('#BE3702')
-export const askEmoji = (user: User) => basic(user, { question: true }).setTitle("Émoji").setDescription(`Quel émoji voulez-vous utiliser ?\nRépondez dans le chat par un émoji\nRépondez par \`cancel\` pour annuler`)
-export const underCooldown = (user: User) => basic(user, { denied: true }).setTitle("Cooldown").setDescription(`Vous avez un cooldown sur cette commande, veuillez patienter quelques secondes avant de recommencer`)
-export const playlistVisibilityConflict = (user: User, playlist: { name: string; public: boolean; emoji?: string }) => basic(user, { denied: true }).setTitle(`Playlist ${playlist.public ? 'publique' : 'privée'}`).setDescription(`La playlist ${playlist.emoji ? playlist.emoji + ' ' : ''}${playlist.name} **est déjà** ${playlist.public ? 'publique' : 'privée'}`)
-export const userBot = (user: User, target: userPingResolvable) => basic(user, { denied: true }).setTitle("Robot").setDescription(`${pingUser(target)} est un bot.\nCette action n'est pas faisable sur un bot`)
-export const shareSelf = (user: User) => basic(user, { denied: true }).setTitle("Auto-partage").setDescription(`Vous ne pouvez pas partager la playlist à vous-même`)
-export const alreadyShared = (user: User, target: userPingResolvable) => basic(user, { denied: true }).setTitle("Déjà partagée").setDescription(`Vous partagez déjà la playlist à ${pingUser(target)}`)
-export const notShared = (user: User, target: userPingResolvable) => basic(user, { denied: true }).setTitle("Non partagée").setDescription(`La playlist n'est pas partagée à ${pingUser(target)}`)
+export const shuffled = (user: User) =>
+    basic(user, { accentColor: true })
+        .setTitle('Playlist mélangée')
+        .setDescription(`La liste de lecture a été mélangée`);
+export const paused = (user: User) =>
+    basic(user, { accentColor: true }).setTitle('Pause').setDescription(`La musique a été mise en pause`);
+export const resumed = (user: User) =>
+    basic(user, { accentColor: true }).setTitle('Lecture').setDescription(`La musique a été remise en lecture`);
+export const notPaused = (user: User) =>
+    basic(user, { denied: true }).setTitle('Musique en lecture').setDescription(`La musique n'est pas en pause`);
+export const playlistAlreadyExists = (user: User, playlist: string) =>
+    basic(user, { denied: true })
+        .setTitle('Playlist existante')
+        .setDescription(`Vous avez déjà une playlist du même nom`);
+export const unexistingPlaylist = (user: User, playlist?: string) =>
+    basic(user, { denied: true })
+        .setTitle('Playlist inexistante')
+        .setDescription(`La playlist${playlist ? ` **${playlist}**` : ''} n'existe pas`);
+export const alreadyAdded = (user: User) =>
+    basic(user, { denied: true })
+        .setTitle('Musique déjà ajoutée')
+        .setDescription(`Cette musique est déjà dans la playlist`);
+export const songAdded = (user: User, track: Track) =>
+    basic(user, { accentColor: true })
+        .setTitle('Musique ajoutée')
+        .setDescription(`La musique **${track.title}** a été ajoutée dans la playlist`);
+export const songRemoved = (user: User) =>
+    basic(user, { accentColor: true })
+        .setTitle('Musique retirée')
+        .setDescription(`La musique a été retirée de la playlist`);
+export const sharedWith = (user: User, target: userPingResolvable) =>
+    basic(user, { accentColor: true })
+        .setTitle('Playlist partagée')
+        .setDescription(`La playlist a été partagée avec ${pingUser(target)}`);
+export const unshared = (user: User, target: userPingResolvable) =>
+    basic(user, { accentColor: true })
+        .setTitle('Playlist départagée')
+        .setDescription(`Vous ne partagez plus la playlist à ${pingUser(target)}`);
+export const totalyUnshared = (user: User) =>
+    basic(user, { accentColor: true })
+        .setTitle('Playlist privée')
+        .setDescription(`Plus personne n'a accès à la playlist`);
+export const visibility = (user: User, visible: 'public' | 'private') =>
+    basic(user, { accentColor: true })
+        .setTitle(`Playlist ${visible === 'private' ? 'privée' : 'publique'}`)
+        .setDescription(`Votre playlist est maintenant **${visible === 'private' ? 'privée' : 'publique'}**`);
+export const deleted = (user: User, playlistName: string) =>
+    basic(user, { accentColor: true })
+        .setTitle('Playlist supprimée')
+        .setDescription(`La playlist **${playlistName}** a été supprimée`);
+export const created = (user: User, name: string) =>
+    basic(user, { accentColor: true })
+        .setTitle('Playlist créee')
+        .setDescription(`Vous avez crée la playlist **${name}**`);
+export const invalidEmoji = (user: User) =>
+    basic(user, { denied: true })
+        .setTitle('Émoji invalide')
+        .setDescription(
+            `Ce n'est pas un émoji valide.\nVeuillez envoyer un émoji correct, et assurez-vous que je puisse accéder à cet émoji`
+        );
+export const wait = (user: User) =>
+    basic(user).setTitle('Patientez').setDescription(`Veuillez patienter quelques instants...`).setColor('#BE3702');
+export const askEmoji = (user: User) =>
+    basic(user, { question: true })
+        .setTitle('Émoji')
+        .setDescription(
+            `Quel émoji voulez-vous utiliser ?\nRépondez dans le chat par un émoji\nRépondez par \`cancel\` pour annuler`
+        );
+export const underCooldown = (user: User) =>
+    basic(user, { denied: true })
+        .setTitle('Cooldown')
+        .setDescription(
+            `Vous avez un cooldown sur cette commande, veuillez patienter quelques secondes avant de recommencer`
+        );
+export const playlistVisibilityConflict = (user: User, playlist: { name: string; public: boolean; emoji?: string }) =>
+    basic(user, { denied: true })
+        .setTitle(`Playlist ${playlist.public ? 'publique' : 'privée'}`)
+        .setDescription(
+            `La playlist ${playlist.emoji ? playlist.emoji + ' ' : ''}${playlist.name} **est déjà** ${
+                playlist.public ? 'publique' : 'privée'
+            }`
+        );
+export const userBot = (user: User, target: userPingResolvable) =>
+    basic(user, { denied: true })
+        .setTitle('Robot')
+        .setDescription(`${pingUser(target)} est un bot.\nCette action n'est pas faisable sur un bot`);
+export const shareSelf = (user: User) =>
+    basic(user, { denied: true })
+        .setTitle('Auto-partage')
+        .setDescription(`Vous ne pouvez pas partager la playlist à vous-même`);
+export const alreadyShared = (user: User, target: userPingResolvable) =>
+    basic(user, { denied: true })
+        .setTitle('Déjà partagée')
+        .setDescription(`Vous partagez déjà la playlist à ${pingUser(target)}`);
+export const notShared = (user: User, target: userPingResolvable) =>
+    basic(user, { denied: true })
+        .setTitle('Non partagée')
+        .setDescription(`La playlist n'est pas partagée à ${pingUser(target)}`);

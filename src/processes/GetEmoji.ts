@@ -35,10 +35,7 @@ export default new Process(
                     !!message.client.emojis.cache.get(message.content) ||
                     !!message.client.emojis.cache.find((x) => x.toString() === message.content);
                 if (!valid) {
-                    SendAndDelete.process(
-                        { embeds: [invalidEmoji(message.author)] },
-                        message.channel as TextChannel
-                    );
+                    SendAndDelete.process({ embeds: [invalidEmoji(message.author)] }, message.channel as TextChannel);
                     return;
                 }
 
