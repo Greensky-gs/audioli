@@ -13,14 +13,16 @@ export default new AmethystEvent('commandDenied', (command, reason) => {
         if (codes.find((x) => x.x === reason.code))
             return command.interaction
                 .reply({
-                    embeds: [codes.find((x) => x.x === reason.code)?.embed(command.interaction.user) as EmbedBuilder]
+                    embeds: [codes.find((x) => x.x === reason.code)?.embed(command.interaction.user) as EmbedBuilder],
+                    ephemeral: true
                 })
                 .catch(log4js.trace);
 
         if (!!embeds[reason.metadata?.embedCode]) {
             command.interaction
                 .reply({
-                    embeds: [embeds[reason.metadata?.embedCode](command.interaction.user)]
+                    embeds: [embeds[reason.metadata?.embedCode](command.interaction.user)],
+                    ephemeral: true
                 })
                 .catch(log4js.trace);
         } else {
