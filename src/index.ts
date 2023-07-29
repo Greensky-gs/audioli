@@ -1,10 +1,12 @@
 import { AmethystClient } from 'amethystjs';
+import { Partials } from 'discord.js';
 import { config } from 'dotenv';
 config();
 
 export const client = new AmethystClient(
     {
-        intents: ['Guilds', 'GuildVoiceStates']
+        intents: ['Guilds', 'GuildVoiceStates', 'MessageContent', 'GuildMessages'],
+        partials: [Partials.Channel, Partials.Message]
     },
     {
         token: process.env.token,
@@ -12,7 +14,8 @@ export const client = new AmethystClient(
         eventsFolder: './dist/events',
         preconditionsFolder: './dist/preconditions',
         autocompleteListenersFolder: './dist/autocompletes',
-        debug: true
+        debug: true,
+        prefix: 'au!'
     }
 );
 

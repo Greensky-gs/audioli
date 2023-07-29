@@ -7,7 +7,8 @@ export default new AmethystEvent('commandDenied', (command, reason) => {
     if (command.interaction) {
         const codes: { x: keyof typeof commandDeniedCode; embed: (user: User) => EmbedBuilder }[] = [
             { x: 'GuildOnly', embed: guildOnly },
-            { x: 'OwnerOnly', embed: ownerOnly }
+            { x: 'OwnerOnly', embed: ownerOnly },
+            { x: 'UnderCooldown', embed: embeds.underCooldown }
         ];
 
         if (codes.find((x) => x.x === reason.code))

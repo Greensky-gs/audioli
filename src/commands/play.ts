@@ -60,7 +60,7 @@ export default new AmethystCommand({
 }).setChatInputRun(async ({ interaction, client, options }) => {
     const musicSearch = options.getString('musique');
     const author = options.getString('auteur');
-    const autoSelectOption = options.getString('sélection') === 'auto';
+    const autoSelectOption = options.getString('sélection');
     const channel =
         (interaction?.member as GuildMember)?.voice?.channel ??
         (options.getChannel('salon') as VoiceChannel) ??
@@ -90,7 +90,7 @@ export default new AmethystCommand({
             .catch(log4js.trace);
 
     let choice = res.tracks[0];
-    const auto = autoSelectOption ?? configs.getconfig(interaction.guild.id, 'autoSelect');
+    const auto = (autoSelectOption ? autoSelectOption === 'auto' : undefined) ?? configs.getconfig(interaction.guild.id, 'autoSelect');
 
     if (auto && res.tracks.length > 1) {
         const values = {};

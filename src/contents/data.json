@@ -4,7 +4,8 @@
         "beta_accent": "#254D7A",
         "denied": "#D5070F",
         "question": "#7FB3CF",
-        "cancel": "#563A8C"
+        "cancel": "#563A8C",
+        "informations": "#E1831F"
     },
     "links": {
         "invite": "https://bit.ly/3OekMKv",

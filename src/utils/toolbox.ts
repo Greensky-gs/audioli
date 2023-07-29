@@ -7,7 +7,8 @@ import {
     Channel,
     ChannelType,
     Collection,
-    Interaction
+    Interaction,
+    User
 } from 'discord.js';
 import datas from '../contents/data.json';
 import { config, configKey } from '../typings/configs';
@@ -15,6 +16,7 @@ import { ButtonIds, buttonOptions } from '../typings/buttons';
 import player from '../cache/player';
 import { NodeResolvable } from 'discord-player';
 import { dbBoolRes } from '../typings/database';
+import { userPingResolvable } from '../typings/types';
 
 export const sqlise = (str: string | number | boolean) =>
     typeof str === 'boolean' ? dbBool(str) : str.toString().replace(/"/g, '\\"');
@@ -99,3 +101,4 @@ export const resize = (str: string, size = 4096) => {
 export const getNode = (node: NodeResolvable | BaseInteraction) => {
     return player.nodes.get(node instanceof BaseInteraction ? node.guild : node)
 }
+export const pingUser = (user: userPingResolvable) => typeof user === 'string' ? `<@${user}>` : `<@${user instanceof User ? user.id : user?.user?.id}>`
