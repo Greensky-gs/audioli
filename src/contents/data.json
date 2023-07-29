@@ -1,6 +1,7 @@
 {
     "colors": {
         "accent": "#543B48",
+        "beta_accent": "#254D7A",
         "denied": "#D5070F",
         "question": "#7FB3CF",
         "cancel": "#563A8C"
