@@ -1,15 +1,20 @@
 import {
     ActionRowBuilder,
     AnyComponentBuilder,
+    BaseInteraction,
     ButtonBuilder,
     ButtonStyle,
     Channel,
     ChannelType,
-    Collection
+    Collection,
+    Interaction
 } from 'discord.js';
 import datas from '../contents/data.json';
 import { config, configKey } from '../typings/configs';
 import { ButtonIds, buttonOptions } from '../typings/buttons';
+import player from '../cache/player';
+import { NodeResolvable } from 'discord-player';
+import { dbBoolRes } from '../typings/database';
 
 export const sqlise = (str: string | number | boolean) =>
     typeof str === 'boolean' ? dbBool(str) : str.toString().replace(/"/g, '\\"');
@@ -22,8 +27,8 @@ export const data = <Folder extends keyof typeof datas, Key extends keyof (typeo
 export const getConfig = <Config extends configKey>(config: Config): config<Config> => {
     return datas.configs[config] as unknown as config<Config>;
 };
-export const dbBool = (x: number | string | boolean) =>
-    typeof x === 'number' ? x === 1 : typeof x === 'string' ? x === '1' : x ? '1' : '0';
+export const dbBool = <Input extends number | string | boolean>(x: Input): dbBoolRes<Input> =>
+    (typeof x === 'number' ? x === 1 : typeof x === 'string' ? x === '1' : x ? '1' : '0') as dbBoolRes<Input>;
 export const row = <Components extends AnyComponentBuilder>(
     ...components: Components[]
 ): ActionRowBuilder<Components> => {
@@ -91,3 +96,6 @@ export const resize = (str: string, size = 4096) => {
     if (str.length <= size) return str;
     return str.slice(0, size - 3) + '...';
 };
+export const getNode = (node: NodeResolvable | BaseInteraction) => {
+    return player.nodes.get(node instanceof BaseInteraction ? node.guild : node)
+}

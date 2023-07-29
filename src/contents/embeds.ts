@@ -1,7 +1,7 @@
 import { ColorResolvable, EmbedBuilder, User, VoiceChannel } from 'discord.js';
 import { colors } from '../contents/data.json';
 import { Track } from 'discord-player';
-import { msToSentence, pingChan, plurial, resize } from '../utils/toolbox';
+import { data, msToSentence, pingChan, plurial, resize } from '../utils/toolbox';
 
 const color = <Color extends keyof typeof colors>(color: Color): ColorResolvable => {
     return colors[color] as ColorResolvable;
@@ -23,7 +23,7 @@ const basic = (
         text: !!(options?.footerText ?? 'user') ? user.username : user.client.user.username
     });
 
-    if (!!options?.accentColor) embed.setColor(color('accent'));
+    if (!!options?.accentColor) embed.setColor(color(user.client.user.username.includes('Dev') ? 'beta_accent' : 'accent'));
     if (!!options?.denied) embed.setColor(color('denied'));
     if (!!options?.question) embed.setColor(color('question'));
 
@@ -120,3 +120,7 @@ export const moved = (user: User, track: Track) =>
     basic(user, { accentColor: true })
         .setTitle('Musique déplacée')
         .setDescription(`La musique **${track.title}** a été déplacée`);
+export const shuffled = (user: User) => basic(user, { accentColor: true }).setTitle("Playlist mélangée").setDescription(`La liste de lecture a été mélangée`)
+export const paused = (user: User) => basic(user,  {  accentColor: true}).setTitle("Pause").setDescription(`La musique a été mise en pause`)
+export const resumed = (user: User) => basic(user,  { accentColor: true }).setTitle("Lecture").setDescription(`La musique a été remise en lecture`)
+export const notPaused = (user: User) => basic(user, { denied: true }).setTitle("Musique en lecture").setDescription(`La musique n'est pas en pause`)

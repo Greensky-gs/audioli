@@ -3,7 +3,7 @@ import playing from '../preconditions/playing';
 import isDj from '../preconditions/isDj';
 import { ApplicationCommandOptionType, VoiceChannel } from 'discord.js';
 import player from '../cache/player';
-import { error, moveSameSong, moved, play, skipped, trackRemoved } from '../contents/embeds';
+import { error, moveSameSong, moved, play, shuffled, skipped, trackRemoved } from '../contents/embeds';
 
 export default new AmethystCommand({
     name: 'liste',
@@ -70,12 +70,24 @@ export default new AmethystCommand({
                     autocomplete: true
                 }
             ]
+        },
+        {
+            name: 'mélanger',
+            description: "Mélange la liste de lecture",
+            type: ApplicationCommandOptionType.Subcommand
         }
     ]
 }).setChatInputRun(async ({ interaction, options }) => {
     const cmd = options.getSubcommand();
     const node = player.nodes.get(interaction.guild);
 
+    if (cmd === 'mélanger') {
+        node.tracks.shuffle()
+        
+        interaction.reply({
+            embeds: [shuffled(interaction.user)]
+        }).catch(log4js.trace)
+    }
     if (cmd === 'déplacer') {
         const selected = options.getString('musique');
         const sens = options.getString('position') as 'before' | 'after';
