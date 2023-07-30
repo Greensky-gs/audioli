@@ -241,51 +241,134 @@ export const playlistPlayed = (user: User, channel: VoiceChannel, addedToQueue?:
         );
 export const emptyPlaylist = (user: User) =>
     basic(user, { denied: true }).setTitle('Playlist vide').setDescription(`La playlist est vide`);
-export const help = (user: User) => basic(user, { accentColor: true })
-    .setThumbnail(user.client.user.displayAvatarURL())
-    .setTitle("Page d'aide")
-    .setDescription(`Voici la page d'aide de ${pingUser(user.client.user)}\n${user.client.chatInputCommands.map((cmd) => `\`/${cmd.options.name}\` : ${cmd.options.description}`).join('\n')}`)
-    .setFields(
-        {
+export const help = (user: User) =>
+    basic(user, { accentColor: true })
+        .setThumbnail(user.client.user.displayAvatarURL())
+        .setTitle("Page d'aide")
+        .setDescription(
+            `Voici la page d'aide de ${pingUser(user.client.user)}\n${user.client.chatInputCommands
+                .map((cmd) => `\`/${cmd.options.name}\` : ${cmd.options.description}`)
+                .join('\n')}`
+        )
+        .setFields({
             name: 'Liens',
-            value: `[Serveur de support](${data('links', 'support')})\n[Invitation](${data('links', 'invite')})\n[Instagram](${data('links', 'instagram')})\nEmail : \`${data('links', 'email')}\`\n[Code source](https://github.com/Greensky-gs/audioli)`,
+            value: `[Serveur de support](${data('links', 'support')})\n[Invitation](${data(
+                'links',
+                'invite'
+            )})\n[Instagram](${data('links', 'instagram')})\nEmail : \`${data(
+                'links',
+                'email'
+            )}\`\n[Code source](https://github.com/Greensky-gs/audioli)`,
             inline: false
-        }
-    )
+        });
 export const commandHelp = (user: User, { options, ...command }: AmethystCommand) => {
     const checks: { condition: boolean; msg: string }[] = [
         { condition: options.preconditions.includes(preconditions.GuildOnly), msg: 'être dans un serveur' },
         { condition: options.preconditions.includes(isDj), msg: 'être DJ' },
         { condition: options.preconditions.includes(preconditions.OwnerOnly), msg: 'être propriétaire du serveur' }
-    ]
-    const permissions = checks.filter(x => x.condition).map(x => x.msg);
+    ];
+    const permissions = checks.filter((x) => x.condition).map((x) => x.msg);
 
     const embed = basic(user, { accentColor: true })
         .setTitle(`Commande ${options.name}`)
-        .setDescription(`Description : \`\`\`${options.description}\`\`\`\nPermissions : ${permissions.length === 0 ? 'Aucune permission' : permissions.join(', ')}`)
+        .setDescription(
+            `Description : \`\`\`${options.description}\`\`\`\nPermissions : ${
+                permissions.length === 0 ? 'Aucune permission' : permissions.join(', ')
+            }`
+        );
     return embed;
-}
-export const stopped = (user: User) => basic(user, { accentColor: true }).setTitle("Musique arrêtée").setDescription(`La musique a été arrêtée`)
-export const invalidTime = (user: User) => basic(user, { denied: true }).setTitle("Durée invalide").setDescription(`Ce n'est pas une durée valide.\nUtilisez un chiffre, suivit de \`s\` pour les secondes, \`m\` pour les minutes, \`h\` pour les heures et \`d\` pour les jours`)
-export const timeQuestion = (user: User) => basic(user, { question: true }).setTitle("Durée").setDescription(`Envoyez la durée que vous voulez dans le chat\nUtilisez un chiffre, suivit de \`s\` pour les secondes, \`m\` pour les minutes, \`h\` pour les heures et \`d\` pour les jours\n\nRépondez par \`cancel\` pour annuler`)
-export const invalidNumber = (user: User) => basic(user, { denied: true }).setTitle("Nombre invalide").setDescription(`Ce n'est pas un nombre valide`)
+};
+export const stopped = (user: User) =>
+    basic(user, { accentColor: true }).setTitle('Musique arrêtée').setDescription(`La musique a été arrêtée`);
+export const invalidTime = (user: User) =>
+    basic(user, { denied: true })
+        .setTitle('Durée invalide')
+        .setDescription(
+            `Ce n'est pas une durée valide.\nUtilisez un chiffre, suivit de \`s\` pour les secondes, \`m\` pour les minutes, \`h\` pour les heures et \`d\` pour les jours`
+        );
+export const timeQuestion = (user: User) =>
+    basic(user, { question: true })
+        .setTitle('Durée')
+        .setDescription(
+            `Envoyez la durée que vous voulez dans le chat\nUtilisez un chiffre, suivit de \`s\` pour les secondes, \`m\` pour les minutes, \`h\` pour les heures et \`d\` pour les jours\n\nRépondez par \`cancel\` pour annuler`
+        );
+export const invalidNumber = (user: User) =>
+    basic(user, { denied: true }).setTitle('Nombre invalide').setDescription(`Ce n'est pas un nombre valide`);
 
 // Embeds DJ
-export const djListUsersBase = (user: User, total: number) => basic(user, { accentColor: true }).setTitle("Liste des DJ").setDescription(`Voici la liste des DJ (${numerize(total)})\n`)
-export const emptyUsersDJ = (user: User) => basic(user, { accentColor: true }).setTitle("Liste des DJ").setDescription(`Il n'y a aucun DJ`)
-export const djListRolesBase = (user: User, total: number) => basic(user, { accentColor: true }).setTitle("Rôles de DJ").setDescription(`Voici la liste des rôles de DJ (${numerize(total)})\n`)
-export const emptyRolesDJ = (user: User) => basic(user, { accentColor: true }).setTitle("Rôles de DJ").setDescription(`Il n'y a aucun rôle de DJ`)
-export const djUserMapper = (embed: EmbedBuilder, value: { id: string; type: 'user' }) => embed.setDescription(`${embed.data.description}\n${pingUser(value.id)}`)
-export const djRoleMapper = (embed: EmbedBuilder, value: { id: string; type: 'role' }) => embed.setDescription(`${embed.data.description}\n${pingRole(value.id)}`)
-export const djListMixedBase = (user: User, total: number) => basic(user, { accentColor: true }).setTitle("Liste des DJ").setDescription(`Voici la liste des rôles de DJ et les DJ (${numerize(total)})\n`)
-export const emptyDjList = (user: User) => basic(user, { accentColor: true }).setTitle("Aucun DJ").setDescription(`La liste est complètement vide`)
-export const djMixMapper = (embed: EmbedBuilder, value: { id: string; type: 'user' | 'role' }) => embed.addFields({ name: value.type === 'role' ? 'Rôle' : 'Utilisateur', value: value.type === 'role' ? pingRole(value.id) : pingUser(value.id), inline: false })
-export const djListQuestion = (user: User) => basic(user, { question: true }).setTitle("Liste").setDescription(`Quelle liste voulez-vous voir ?`)
-export const djAdded = (user: User, value: { id: string; type: 'user' | 'role' }) => value.type === 'role' ? basic(user, { accentColor: true }).setTitle("Rôle DJ ajouté").setDescription(`Le rôle ${pingRole(value.id)} est maintenant un rôle de DJ`) : basic(user, { accentColor: true }).setTitle("DJ ajouté").setDescription(`${pingUser(value.id)} est maintenant un DJ`)
-export const djRemoved = (user: User, value: { id: string; type: 'user' | 'role' }) => value.type === 'role' ? basic(user, { accentColor: true }).setTitle("Rôle DJ retiré").setDescription(`Le rôle ${pingRole(value.id)} n'est plus un rôle de DJ`) : basic(user, { accentColor: true }).setTitle("DJ retiré").setDescription(`${pingUser(value.id)} n'est plus un DJ`)
-export const alreadyDJRole = (user: User, role: Role) => basic(user, { denied: true }).setTitle("Rôle enregistré").setDescription(`Le rôle ${pingRole(role)} est déjà un rôle de DJ`)
-export const alreadyDJUser = (user: User, dj: User) => basic(user, { denied: true }).setTitle("DJ enregistré").setDescription(`${pingUser(dj)} est déjà un DJ`)
-export const notDJRole = (user: User, role: Role) => basic(user, { denied: true }).setTitle("Rôle non enregistré").setDescription(`Le rôle ${pingRole(role)} n'est pas un rôle de DJ`)
-export const notDJUser = (user: User, dj: User) => basic(user, { denied: true }).setTitle("DJ non enregistré").setDescription(`${pingUser(dj)} n'est pas un DJ`)
-export const djNoOptions = (user: User) => basic(user, { denied: true }).setDescription("Vous n'avez précisé aucune option").setTitle(`Aucune option`)
-export const missingPerms = (user: User, perms: PermissionsString[]) => basic(user, { denied: true }).setTitle("Permissions insuffisantes").setDescription(`Vous n'avez pas ${perms.length === 1 ? `la permission \`${data('perms', perms[0])}\` pour faire cette commande` : `les permissions ${perms.map((perm) => `\`${data('perms', perm)}\``).join(', ')} pour faire cette commande`}`)
+export const djListUsersBase = (user: User, total: number) =>
+    basic(user, { accentColor: true })
+        .setTitle('Liste des DJ')
+        .setDescription(`Voici la liste des DJ (${numerize(total)})\n`);
+export const emptyUsersDJ = (user: User) =>
+    basic(user, { accentColor: true }).setTitle('Liste des DJ').setDescription(`Il n'y a aucun DJ`);
+export const djListRolesBase = (user: User, total: number) =>
+    basic(user, { accentColor: true })
+        .setTitle('Rôles de DJ')
+        .setDescription(`Voici la liste des rôles de DJ (${numerize(total)})\n`);
+export const emptyRolesDJ = (user: User) =>
+    basic(user, { accentColor: true }).setTitle('Rôles de DJ').setDescription(`Il n'y a aucun rôle de DJ`);
+export const djUserMapper = (embed: EmbedBuilder, value: { id: string; type: 'user' }) =>
+    embed.setDescription(`${embed.data.description}\n${pingUser(value.id)}`);
+export const djRoleMapper = (embed: EmbedBuilder, value: { id: string; type: 'role' }) =>
+    embed.setDescription(`${embed.data.description}\n${pingRole(value.id)}`);
+export const djListMixedBase = (user: User, total: number) =>
+    basic(user, { accentColor: true })
+        .setTitle('Liste des DJ')
+        .setDescription(`Voici la liste des rôles de DJ et les DJ (${numerize(total)})\n`);
+export const emptyDjList = (user: User) =>
+    basic(user, { accentColor: true }).setTitle('Aucun DJ').setDescription(`La liste est complètement vide`);
+export const djMixMapper = (embed: EmbedBuilder, value: { id: string; type: 'user' | 'role' }) =>
+    embed.addFields({
+        name: value.type === 'role' ? 'Rôle' : 'Utilisateur',
+        value: value.type === 'role' ? pingRole(value.id) : pingUser(value.id),
+        inline: false
+    });
+export const djListQuestion = (user: User) =>
+    basic(user, { question: true }).setTitle('Liste').setDescription(`Quelle liste voulez-vous voir ?`);
+export const djAdded = (user: User, value: { id: string; type: 'user' | 'role' }) =>
+    value.type === 'role'
+        ? basic(user, { accentColor: true })
+              .setTitle('Rôle DJ ajouté')
+              .setDescription(`Le rôle ${pingRole(value.id)} est maintenant un rôle de DJ`)
+        : basic(user, { accentColor: true })
+              .setTitle('DJ ajouté')
+              .setDescription(`${pingUser(value.id)} est maintenant un DJ`);
+export const djRemoved = (user: User, value: { id: string; type: 'user' | 'role' }) =>
+    value.type === 'role'
+        ? basic(user, { accentColor: true })
+              .setTitle('Rôle DJ retiré')
+              .setDescription(`Le rôle ${pingRole(value.id)} n'est plus un rôle de DJ`)
+        : basic(user, { accentColor: true })
+              .setTitle('DJ retiré')
+              .setDescription(`${pingUser(value.id)} n'est plus un DJ`);
+export const alreadyDJRole = (user: User, role: Role) =>
+    basic(user, { denied: true })
+        .setTitle('Rôle enregistré')
+        .setDescription(`Le rôle ${pingRole(role)} est déjà un rôle de DJ`);
+export const alreadyDJUser = (user: User, dj: User) =>
+    basic(user, { denied: true })
+        .setTitle('DJ enregistré')
+        .setDescription(`${pingUser(dj)} est déjà un DJ`);
+export const notDJRole = (user: User, role: Role) =>
+    basic(user, { denied: true })
+        .setTitle('Rôle non enregistré')
+        .setDescription(`Le rôle ${pingRole(role)} n'est pas un rôle de DJ`);
+export const notDJUser = (user: User, dj: User) =>
+    basic(user, { denied: true })
+        .setTitle('DJ non enregistré')
+        .setDescription(`${pingUser(dj)} n'est pas un DJ`);
+export const djNoOptions = (user: User) =>
+    basic(user, { denied: true }).setDescription("Vous n'avez précisé aucune option").setTitle(`Aucune option`);
+export const missingPerms = (user: User, perms: PermissionsString[]) =>
+    basic(user, { denied: true })
+        .setTitle('Permissions insuffisantes')
+        .setDescription(
+            `Vous n'avez pas ${
+                perms.length === 1
+                    ? `la permission \`${data('perms', perms[0])}\` pour faire cette commande`
+                    : `les permissions ${perms
+                          .map((perm) => `\`${data('perms', perm)}\``)
+                          .join(', ')} pour faire cette commande`
+            }`
+        );

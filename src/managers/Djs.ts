@@ -13,10 +13,10 @@ export class DjsManager {
     }
 
     public getRoles(guild: GuildResolvable) {
-        return this.list(guild).filter(x => x.type === 'role')
+        return this.list(guild).filter((x) => x.type === 'role');
     }
     public getUsers(guild: GuildResolvable) {
-        return this.list(guild).filter(x => x.type === 'user')
+        return this.list(guild).filter((x) => x.type === 'user');
     }
     public get cache() {
         return this._cache;
@@ -27,10 +27,13 @@ export class DjsManager {
         return list.concat(guild instanceof Guild ? [{ type: 'user', id: guild.ownerId }] : []);
     }
     public isDj(guild: Guild, user: userResolvable) {
-        if (typeof user === 'string') return !!this.getUsers(guild).find(x => x.id === user)
-        if (user instanceof User) return !!this.getUsers(guild).find(x => x.id === user.id)
+        if (typeof user === 'string') return !!this.getUsers(guild).find((x) => x.id === user);
+        if (user instanceof User) return !!this.getUsers(guild).find((x) => x.id === user.id);
 
-        return !!this.getUsers(guild).find(x => x.id === user.id) || this.getRoles(guild).some(x => user.roles.cache.has(x.id))
+        return (
+            !!this.getUsers(guild).find((x) => x.id === user.id) ||
+            this.getRoles(guild).some((x) => user.roles.cache.has(x.id))
+        );
     }
     public addDj(guild: Guild, input: { id: string; type: 'user' | 'role' }) {
         if (this.isDj(guild, input.id)) return false;
@@ -46,7 +49,7 @@ export class DjsManager {
         );
     }
     public removeDj(guild: Guild, id: string) {
-        if (!this.list(guild).find(x => x.id === id)) return false;
+        if (!this.list(guild).find((x) => x.id === id)) return false;
 
         const list = (this._cache.get(guild.id)?.list ?? []).filter((x) => x.id !== id);
 

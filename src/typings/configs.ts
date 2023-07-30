@@ -15,5 +15,5 @@ export type config<Config extends configKey> = {
     type: configType;
     default: (typeof configs)[Config]['default'];
 };
-export type additionalCustomStringType = { states: { name: string; description: string; value: string }[] }
-export type additionalNumberType = { max: number | null; min: number | null; }
+export type additionalCustomStringType = { states: { name: string; description: string; value: string }[] };
+export type additionalNumberType = { max: number | null; min: number | null };

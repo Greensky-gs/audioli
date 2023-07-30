@@ -112,7 +112,7 @@ export const shuffle = <T>(array: T[]): T[] =>
         .map((value) => [Math.random(), value])
         .sort(([a]: any, [b]: any) => a - b)
         .map((entry) => entry[1]) as T[];
-export const pingRole = (role: string | Role) => `<@&${typeof role === 'string' ? role : role.id}>`
+export const pingRole = (role: string | Role) => `<@&${typeof role === 'string' ? role : role.id}>`;
 export const systemReply = (
     interaction: CommandInteraction | ButtonInteraction,
     content: InteractionReplyOptions
