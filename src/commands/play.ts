@@ -120,7 +120,7 @@ export default new AmethystCommand({
 
     const initiated = initiations.get(interaction.guild.id)
     if (initiated) {
-        const permLevel = interaction.guild.ownerId === initiated ? DJPermLevel.Owner : initiated.wasDj ? DJPermLevel.DJ : initiated.wasAdmin ? DJPermLevel.Admin : DJPermLevel.everyone
+        const permLevel = interaction.guild.ownerId === initiated.id ? DJPermLevel.Owner : initiated.wasDj ? DJPermLevel.DJ : initiated.wasAdmin ? DJPermLevel.Admin : DJPermLevel.everyone
         const userPermLevel = interaction.guild.ownerId === interaction.user.id ? DJPermLevel.Owner : djs.isDj(interaction.guild, interaction.member as GuildMember) ? DJPermLevel.DJ : (interaction.member as GuildMember).permissions.has('Administrator') ? DJPermLevel.Admin : DJPermLevel.everyone
 
         if (permLevel >= userPermLevel && (permLevel === userPermLevel ? permLevel !== DJPermLevel.Owner : true)) {
