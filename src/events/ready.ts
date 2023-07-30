@@ -9,9 +9,12 @@ export default new AmethystEvent('ready', async (client) => {
     });
 
     log4js.config('onLog', (log) => {
+        console.log(log)
         SendInPanel.process(client, log);
     });
     process.on('uncaughtException', (error, origin) => {
-        SendInPanel.process(client, JSON.stringify(error, null, 4));
+        console.log(error)
+        log4js.trace(error)
+        SendInPanel.process(client, `Erreur: ${JSON.stringify(error, null, 4)}\nOrigine: ${JSON.stringify(origin, null, 4)}`);
     });
 });

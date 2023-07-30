@@ -9,12 +9,13 @@ import {
     StringSelectMenuBuilder,
     VoiceChannel
 } from 'discord.js';
-import { cancel, multipleTracks, noTracks, noVoiceChannel, play } from '../contents/embeds';
+import { cancel, emptyPlaylist, multipleTracks, noTracks, noVoiceChannel, play, playPlaylistFirstNotFound, playlistPlayed } from '../contents/embeds';
 import player from '../cache/player';
-import { row } from '../utils/toolbox';
+import { row, shuffle as shuffleArray } from '../utils/toolbox';
 import configs from '../cache/configs';
 import { Track } from 'discord-player';
 import { compareTwoStrings } from 'string-similarity';
+import playlists from '../cache/playlists';
 
 export default new AmethystCommand({
     name: 'jouer',
@@ -23,42 +24,89 @@ export default new AmethystCommand({
     options: [
         {
             name: 'musique',
-            description: 'Musique que vous voulez jouer',
-            type: ApplicationCommandOptionType.String,
-            required: true
-        },
-        {
-            name: 'auteur',
-            description: 'Auteur de la musique',
-            type: ApplicationCommandOptionType.String,
-            required: false
-        },
-        {
-            name: 'salon',
-            description: 'Salon dans lequel vous voulez que je joue de la musique',
-            required: false,
-            type: ApplicationCommandOptionType.Channel,
-            channelTypes: [ChannelType.GuildVoice]
-        },
-        {
-            name: 'sélection',
-            description: 'Vous laisse faire la sélection si elle doit se faire',
-            type: ApplicationCommandOptionType.String,
-            required: false,
-            choices: [
+            description: "Joue une musique",
+            type: ApplicationCommandOptionType.Subcommand,
+            options: [
                 {
-                    name: 'Sélection automatique',
-                    value: 'auto'
+                    name: 'musique',
+                    description: 'Musique que vous voulez jouer',
+                    type: ApplicationCommandOptionType.String,
+                    required: true
                 },
                 {
-                    name: 'Sélection manuelle',
-                    value: 'user'
+                    name: 'auteur',
+                    description: 'Auteur de la musique',
+                    type: ApplicationCommandOptionType.String,
+                    required: false
+                },
+                {
+                    name: 'salon',
+                    description: 'Salon dans lequel vous voulez que je joue de la musique',
+                    required: false,
+                    type: ApplicationCommandOptionType.Channel,
+                    channelTypes: [ChannelType.GuildVoice]
+                },
+                {
+                    name: 'sélection',
+                    description: 'Vous laisse faire la sélection si elle doit se faire',
+                    type: ApplicationCommandOptionType.String,
+                    required: false,
+                    choices: [
+                        {
+                            name: 'Sélection automatique',
+                            value: 'auto'
+                        },
+                        {
+                            name: 'Sélection manuelle',
+                            value: 'user'
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            name: 'playlist',
+            description: "Joue une playlist",
+            type: ApplicationCommandOptionType.Subcommand,
+            options: [
+                {
+                    name: 'playlist',
+                    description: "Playlist que vous voulez jouer",
+                    type: ApplicationCommandOptionType.String,
+                    required: true,
+                    autocomplete: true
+                },
+                {
+                    name: 'aléatoire',
+                    description: "Joue la playlist en mode aléatoire",
+                    required: false,
+                    type: ApplicationCommandOptionType.String,
+                    choices: [
+                        {
+                            name: 'Oui',
+                            value: 'yes'
+                        },
+                        {
+                            name: 'Non',
+                            value: 'non'
+                        }
+                    ]
+                },
+                {
+                    name: 'salon',
+                    description: "Salon dans lequel vous voulez jouer la musique",
+                    required: false,
+                    type: ApplicationCommandOptionType.Channel,
+                    channelTypes: [ChannelType.GuildVoice]
                 }
             ]
         }
     ]
 }).setChatInputRun(async ({ interaction, client, options }) => {
-    const musicSearch = options.getString('musique');
+    const cmd = options.getSubcommand()
+
+    if (cmd === 'musique') {
+        const musicSearch = options.getString('musique');
     const author = options.getString('auteur');
     const autoSelectOption = options.getString('sélection');
     const channel =
@@ -169,4 +217,77 @@ export default new AmethystCommand({
             components: []
         })
         .catch(log4js.trace);
+    }
+
+    if (cmd === 'playlist') {
+        const playlist = playlists.getAbsolute(parseInt(options.getString('playlist')))
+        const channel =
+        (interaction?.member as GuildMember)?.voice?.channel ??
+        (options.getChannel('salon') as VoiceChannel) ??
+        interaction.guild.members?.me.voice?.channel;
+        const shuffle = options.getString('aléatoire') === 'yes'
+
+        
+    if (!channel)
+    return interaction
+        .reply({
+            embeds: [noVoiceChannel(interaction.user)],
+            ephemeral: true
+        })
+        .catch(log4js.trace);
+        if (playlist.songs.length === 0) return interaction.reply({
+            embeds: [ emptyPlaylist(interaction.user) ],
+            ephemeral: true
+        }).catch(log4js.trace)
+
+        const songs = shuffle ? shuffleArray(playlist.songs) : playlist.songs
+
+        await interaction.deferReply().catch(log4js.trace)
+        const playing = !!player.nodes.get(interaction.guild) ? player.nodes.get(interaction.guild).isPlaying() : false;
+
+        if (!playing) {
+            const first = await player.search(songs[0].url).catch(log4js.trace)
+            if (!first || !first?.tracks[0]) return interaction.editReply({
+                embeds: [ playPlaylistFirstNotFound(interaction.user) ]
+            }).catch(log4js.trace)
+
+            player
+                .play(channel as VoiceChannel, first.tracks[0], {
+                nodeOptions: {
+                    volume: configs.getconfig(interaction.guild.id, 'volume'),
+                    leaveOnEmpty: true,
+                    leaveOnEmptyCooldown: 120000,
+                    leaveOnEnd: false,
+                    leaveOnStop: false
+                }
+            })
+            .catch(log4js.trace);
+        }
+
+        const handleQueue = async() => {
+            const _list: Track[] = [];
+            const promisifier = (song: { id: string; title: string; url: string }) => {
+                return new Promise(async(resolve) => {
+                    const details = await player.search(song.url).catch(log4js.trace)
+                    if (!details || !details?.tracks[0]) return resolve(null)
+
+                    _list.push(details.tracks[0])
+                    return resolve(true)
+                })
+            }
+            const list = () => {
+                return _list.filter(x => !!x && (playing ? true : x.url !== songs[0].url))
+            }
+
+            await Promise.all(songs.map(promisifier));
+
+            if (list().length === 0) return;
+            player.nodes.get(interaction.guild).addTrack(list());
+        }
+        handleQueue()
+
+        interaction.editReply({
+            embeds: [ playlistPlayed(interaction.user, channel as VoiceChannel, playing) ]
+        }).catch(log4js.trace)
+     }
 });

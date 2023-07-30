@@ -14,7 +14,7 @@ export default new AutocompleteListener({
         const cmd = interaction.options.getSubcommand();
         const command = interaction.commandName;
 
-        const unallow = ['supprimer', 'ajouter', 'retirer', 'partager', 'visibilité', 'départager'];
+        const unallow = ['supprimer', 'ajouter', 'retirer', 'partager', 'visibilité', 'départager', 'déplacer'];
         const shared = command === 'playlists' ? (unallow.includes(cmd as string) ? false : true) : true;
 
         const lists = playlists.getUserLists(interaction.user.id, { publics: shared, shared });
