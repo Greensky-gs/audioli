@@ -23,7 +23,7 @@ export default new Precondition('is DJ').setChatInputRun(({ interaction }) => {
                     embedCode: 'notADJ'
                 }
             };
-        return true;
+        return { ok: true };
     };
     const admin = () => {
         if (!(interaction.member as GuildMember).permissions.has('Administrator'))
@@ -35,6 +35,7 @@ export default new Precondition('is DJ').setChatInputRun(({ interaction }) => {
                     embedCode: 'notADJ'
                 }
             };
+        return { ok: true };
     };
     if (condition === 'everyone') {
         return {
@@ -44,11 +45,11 @@ export default new Precondition('is DJ').setChatInputRun(({ interaction }) => {
         };
     }
     if (condition === 'djonly') {
-        if (!dj()) return dj() as preconditionRunReturn;
+        if (!dj().ok) return dj() as preconditionRunReturn;
     } else if (condition === 'adminsonly') {
-        if (!admin()) return admin() as preconditionRunReturn;
+        if (!admin().ok) return admin() as preconditionRunReturn;
     } else {
-        if (!dj() || !admin()) {
+        if (!dj().ok || !admin().ok) {
             return {
                 ok: false,
                 type: 'chatInput',
