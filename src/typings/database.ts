@@ -17,9 +17,10 @@ export enum DatabaseTables {
     Configs = 'configs',
     Playlists = 'playlists'
 }
+export type djListType = { id: string; type: 'user' | 'role' }
 export type djs<Raw extends boolean = false> = {
     guild_id: string;
-    list: If<Raw, string, string[]>;
+    list: If<Raw, string, djListType[]>;
 };
 export type configs<Raw extends boolean = false> = {
     guild_id: string;

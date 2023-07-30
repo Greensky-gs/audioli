@@ -14,7 +14,7 @@ export default new Precondition('is DJ').setChatInputRun(({ interaction }) => {
 
     const condition = configs.getconfig(interaction.guild.id, 'djallow');
     const dj = () => {
-        if (!djs.isDj(interaction.guild, interaction.user.id))
+        if (!djs.isDj(interaction.guild, interaction.member as GuildMember))
             return {
                 ok: false,
                 type: 'chatInput',

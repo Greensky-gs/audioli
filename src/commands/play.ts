@@ -120,8 +120,8 @@ export default new AmethystCommand({
 
     const initiated = initiations.get(interaction.guild.id)
     if (initiated) {
-        const permLevel = interaction.guild.ownerId === initiated ? DJPermLevel.Owner : djs.isDj(interaction.guild, initiated) ? DJPermLevel.DJ : DJPermLevel.everyone
-        const userPermLevel = interaction.guild.ownerId === interaction.user.id ? DJPermLevel.Owner : djs.isDj(interaction.guild, interaction.user.id) ? DJPermLevel.DJ : DJPermLevel.everyone
+        const permLevel = interaction.guild.ownerId === initiated ? DJPermLevel.Owner : initiated.wasDj ? DJPermLevel.DJ : initiated.wasAdmin ? DJPermLevel.Admin : DJPermLevel.everyone
+        const userPermLevel = interaction.guild.ownerId === interaction.user.id ? DJPermLevel.Owner : djs.isDj(interaction.guild, interaction.member as GuildMember) ? DJPermLevel.DJ : (interaction.member as GuildMember).permissions.has('Administrator') ? DJPermLevel.Admin : DJPermLevel.everyone
 
         if (permLevel >= userPermLevel && (permLevel === userPermLevel ? permLevel !== DJPermLevel.Owner : true)) {
             return interaction.reply({
@@ -224,7 +224,6 @@ export default new AmethystCommand({
 
         const playing = !!player.nodes.get(interaction.guild) ? player.nodes.get(interaction.guild).isPlaying() : false;
         if (playing) {
-            initiations.set(interaction.guild.id, interaction.user.id)
             player.nodes.get(interaction.guild).addTrack(choice);
         } else {
             player
@@ -238,6 +237,12 @@ export default new AmethystCommand({
                     }
                 })
                 .catch(log4js.trace);
+
+            initiations.set(interaction.guild.id, {
+                id: interaction.user.id,
+                wasDj: djs.isDj(interaction.guild, interaction.member as GuildMember),
+                wasAdmin: (interaction.member as GuildMember).permissions.has('Administrator')
+            })
         }
 
         interaction
@@ -296,7 +301,11 @@ export default new AmethystCommand({
                     }
                 })
                 .catch(log4js.trace);
-            initiations.set(interaction.guild.id, interaction.user.id)
+            initiations.set(interaction.guild.id, {
+                id: interaction.user.id,
+                wasDj: djs.isDj(interaction.guild, interaction.member as GuildMember),
+                wasAdmin: (interaction.member as GuildMember).permissions.has('Administrator')
+            })
         }
 
         const handleQueue = async () => {

@@ -1,8 +1,9 @@
-import { Collection, Guild } from 'discord.js';
-import { DatabaseTables, djs } from '../typings/database';
+import { Collection, Guild, GuildMember, User } from 'discord.js';
+import { DatabaseTables, djListType, djs } from '../typings/database';
 import { query } from '../utils/query';
 import { log4js } from 'amethystjs';
 import { sqlise } from '../utils/toolbox';
+import { GuildResolvable, userResolvable } from '../typings/managers';
 
 export class DjsManager {
     private _cache: Collection<string, djs> = new Collection();
@@ -11,20 +12,31 @@ export class DjsManager {
         this.init();
     }
 
+    public getRoles(guild: GuildResolvable) {
+        return this.list(guild).filter(x => x.type === 'role')
+    }
+    public getUsers(guild: GuildResolvable) {
+        return this.list(guild).filter(x => x.type === 'user')
+    }
     public get cache() {
         return this._cache;
     }
-    public list(guild: Guild) {
-        return this._cache.get(guild?.id)?.list ?? [guild?.ownerId];
+    public list(guild: GuildResolvable) {
+        const list = this._cache.get(typeof guild === 'string' ? guild : guild.id)?.list ?? [];
+
+        return list.concat(guild instanceof Guild ? [{ type: 'user', id: guild.ownerId }] : []);
     }
-    public isDj(guild: Guild, user: string) {
-        return this.list(guild).includes(user);
+    public isDj(guild: Guild, user: userResolvable) {
+        if (typeof user === 'string') return !!this.getUsers(guild).find(x => x.id === user)
+        if (user instanceof User) return !!this.getUsers(guild).find(x => x.id === user.id)
+
+        return !!this.getUsers(guild).find(x => x.id === user.id) || this.getRoles(guild).some(x => user.roles.cache.has(x.id))
     }
-    public addDj(guild: Guild, user: string) {
-        if (this.isDj(guild, user)) return false;
+    public addDj(guild: Guild, input: { id: string; type: 'user' | 'role' }) {
+        if (this.isDj(guild, input.id)) return false;
 
         const list = this._cache.get(guild.id)?.list ?? [];
-        list.push(user);
+        list.push(input);
 
         this._cache.set(guild.id, { guild_id: guild.id, list });
         query(
@@ -33,10 +45,10 @@ export class DjsManager {
             )}") ON DUPLICATE KEY UPDATE list="${this.mysqlise(list)}"`
         );
     }
-    public removeDj(guild: Guild, user: string) {
-        if (!this.isDj(guild, user)) return false;
+    public removeDj(guild: Guild, id: string) {
+        if (!this.list(guild).find(x => x.id === id)) return false;
 
-        const list = (this._cache.get(guild.id)?.list ?? []).filter((x) => x !== user);
+        const list = (this._cache.get(guild.id)?.list ?? []).filter((x) => x.id !== id);
 
         this._cache.set(guild.id, { guild_id: guild.id, list });
         query(
@@ -46,7 +58,7 @@ export class DjsManager {
         );
     }
 
-    private mysqlise(str: string[]) {
+    private mysqlise(str: djListType[]) {
         return sqlise(JSON.stringify(str));
     }
     private async checkDb() {
