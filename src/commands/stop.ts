@@ -9,7 +9,7 @@ export default new AmethystCommand({
     preconditions: [preconditions.GuildOnly, isDj]
 }).setChatInputRun(async({ interaction }) => {
     const node = getNode(interaction);
-    if (!node || (!node.isPlaying() || !node.node.isPaused())) return interaction.reply({
+    if (!node || !node?.node?.queue?.currentTrack) return interaction.reply({
         embeds: [notPlaying(interaction.user)],
         ephemeral: true
     }).catch(log4js.trace)
