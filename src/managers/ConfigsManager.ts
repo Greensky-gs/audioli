@@ -43,11 +43,9 @@ export class ConfigsManager {
         const confs = this.getConfigs(guild);
         const value = (x: keyof typeof confs) =>
             typeof confs[x] === 'boolean' ? dbBool(confs[x]) : sqlise(confs[x].toString());
-        query(`INSERT INTO ${DatabaseTables.Configs} ( ${Object.keys(confs).join(', ')} ) VALUES (
-            ${Object.keys(confs)
+        query(`INSERT INTO ${DatabaseTables.Configs} ( ${Object.keys(confs).join(', ')} ) VALUES (${Object.keys(confs)
                 .map((x: keyof typeof confs) => `"${value(x)}"`)
-                .join(', ')}
-        ) ON DUPLICATE UPDATE ${key}="${value(key)}"`);
+                .join(', ')}) ON DUPLICATE KEY UPDATE ${key}="${value(key)}"`);
     }
     private async fillCache() {
         const res = await query<configs<true>>(`SELECT * FROM ${DatabaseTables.Configs}`);

@@ -3,11 +3,14 @@ import {
     AnyComponentBuilder,
     BaseInteraction,
     ButtonBuilder,
+    ButtonInteraction,
     ButtonStyle,
     Channel,
     ChannelType,
     Collection,
+    CommandInteraction,
     Interaction,
+    InteractionReplyOptions,
     Role,
     User
 } from 'discord.js';
@@ -110,3 +113,10 @@ export const shuffle = <T>(array: T[]): T[] =>
         .sort(([a]: any, [b]: any) => a - b)
         .map((entry) => entry[1]) as T[];
 export const pingRole = (role: string | Role) => `<@&${typeof role === 'string' ? role : role.id}>`
+export const systemReply = (
+    interaction: CommandInteraction | ButtonInteraction,
+    content: InteractionReplyOptions
+): Promise<unknown> => {
+    const fnt = interaction.replied || interaction.deferred ? 'editReply' : 'reply';
+    return (interaction[fnt] as CallableFunction)(content);
+};

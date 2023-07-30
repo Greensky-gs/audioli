@@ -1,4 +1,4 @@
-import { ColorResolvable, EmbedBuilder, Role, User, VoiceChannel } from 'discord.js';
+import { ColorResolvable, EmbedBuilder, PermissionsString, Role, User, VoiceChannel } from 'discord.js';
 import { colors } from '../contents/data.json';
 import { Track } from 'discord-player';
 import { data, msToSentence, numerize, pingChan, pingRole, pingUser, plurial, resize } from '../utils/toolbox';
@@ -266,6 +266,9 @@ export const commandHelp = (user: User, { options, ...command }: AmethystCommand
     return embed;
 }
 export const stopped = (user: User) => basic(user, { accentColor: true }).setTitle("Musique arrêtée").setDescription(`La musique a été arrêtée`)
+export const invalidTime = (user: User) => basic(user, { denied: true }).setTitle("Durée invalide").setDescription(`Ce n'est pas une durée valide.\nUtilisez un chiffre, suivit de \`s\` pour les secondes, \`m\` pour les minutes, \`h\` pour les heures et \`d\` pour les jours`)
+export const timeQuestion = (user: User) => basic(user, { question: true }).setTitle("Durée").setDescription(`Envoyez la durée que vous voulez dans le chat\nUtilisez un chiffre, suivit de \`s\` pour les secondes, \`m\` pour les minutes, \`h\` pour les heures et \`d\` pour les jours\n\nRépondez par \`cancel\` pour annuler`)
+export const invalidNumber = (user: User) => basic(user, { denied: true }).setTitle("Nombre invalide").setDescription(`Ce n'est pas un nombre valide`)
 
 // Embeds DJ
 export const djListUsersBase = (user: User, total: number) => basic(user, { accentColor: true }).setTitle("Liste des DJ").setDescription(`Voici la liste des DJ (${numerize(total)})\n`)
@@ -285,3 +288,4 @@ export const alreadyDJUser = (user: User, dj: User) => basic(user, { denied: tru
 export const notDJRole = (user: User, role: Role) => basic(user, { denied: true }).setTitle("Rôle non enregistré").setDescription(`Le rôle ${pingRole(role)} n'est pas un rôle de DJ`)
 export const notDJUser = (user: User, dj: User) => basic(user, { denied: true }).setTitle("DJ non enregistré").setDescription(`${pingUser(dj)} n'est pas un DJ`)
 export const djNoOptions = (user: User) => basic(user, { denied: true }).setDescription("Vous n'avez précisé aucune option").setTitle(`Aucune option`)
+export const missingPerms = (user: User, perms: PermissionsString[]) => basic(user, { denied: true }).setTitle("Permissions insuffisantes").setDescription(`Vous n'avez pas ${perms.length === 1 ? `la permission \`${data('perms', perms[0])}\` pour faire cette commande` : `les permissions ${perms.map((perm) => `\`${data('perms', perm)}\``).join(', ')} pour faire cette commande`}`)

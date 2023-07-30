@@ -11,10 +11,17 @@ export default new AmethystEvent('commandDenied', (command, reason) => {
             { x: 'UnderCooldown', embed: embeds.underCooldown }
         ];
 
-        if (codes.find((x) => x.x === reason.code))
+        if (reason.code === commandDeniedCode.UserMissingPerms) {
+            return command.interaction.reply({
+                embeds: [ embeds.missingPerms(command.interaction.user, reason.metadata.permissions.missing) ],
+                ephemeral: true
+            }).catch(log4js.trace)
+        }
+
+        if (codes.find((x) => commandDeniedCode[x.x] === reason.code))
             return command.interaction
                 .reply({
-                    embeds: [codes.find((x) => x.x === reason.code)?.embed(command.interaction.user) as EmbedBuilder],
+                    embeds: [codes.find((x) => commandDeniedCode[x.x] === reason.code)?.embed(command.interaction.user) as EmbedBuilder],
                     ephemeral: true
                 })
                 .catch(log4js.trace);
