@@ -265,3 +265,4 @@ export const commandHelp = (user: User, { options, ...command }: AmethystCommand
         .setDescription(`Description : \`\`\`${options.description}\`\`\`\nPermissions : ${permissions.length === 0 ? 'Aucune permission' : permissions.join(', ')}`)
     return embed;
 }
+export const stopped = (user: User) => basic(user, { accentColor: true }).setTitle("Musique arrêtée").setDescription(`La musique a été arrêtée`)

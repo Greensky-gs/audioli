@@ -15,6 +15,7 @@ import {
     multipleTracks,
     noTracks,
     noVoiceChannel,
+    notADJ,
     play,
     playPlaylistFirstNotFound,
     playlistPlayed
@@ -25,11 +26,14 @@ import configs from '../cache/configs';
 import { Track } from 'discord-player';
 import { compareTwoStrings } from 'string-similarity';
 import playlists from '../cache/playlists';
+import initiations from '../cache/initiations';
+import { DJPermLevel } from '../typings/types';
+import djs from '../cache/djs';
 
 export default new AmethystCommand({
     name: 'jouer',
     description: 'Joue une musique',
-    preconditions: [preconditions.GuildOnly, isDj],
+    preconditions: [preconditions.GuildOnly],
     options: [
         {
             name: 'musique',
@@ -113,6 +117,19 @@ export default new AmethystCommand({
     ]
 }).setChatInputRun(async ({ interaction, client, options }) => {
     const cmd = options.getSubcommand();
+
+    const initiated = initiations.get(interaction.guild.id)
+    if (initiated) {
+        const permLevel = interaction.guild.ownerId === initiated ? DJPermLevel.Owner : djs.isDj(interaction.guild, initiated) ? DJPermLevel.DJ : DJPermLevel.everyone
+        const userPermLevel = interaction.guild.ownerId === interaction.user.id ? DJPermLevel.Owner : djs.isDj(interaction.guild, interaction.user.id) ? DJPermLevel.DJ : DJPermLevel.everyone
+
+        if (permLevel >= userPermLevel && (permLevel === userPermLevel ? permLevel !== DJPermLevel.Owner : true)) {
+            return interaction.reply({
+                embeds: [ notADJ(interaction.user) ],
+                ephemeral: true
+            }).catch(log4js.trace)
+        }
+    }
 
     if (cmd === 'musique') {
         const musicSearch = options.getString('musique');
@@ -207,6 +224,7 @@ export default new AmethystCommand({
 
         const playing = !!player.nodes.get(interaction.guild) ? player.nodes.get(interaction.guild).isPlaying() : false;
         if (playing) {
+            initiations.set(interaction.guild.id, interaction.user.id)
             player.nodes.get(interaction.guild).addTrack(choice);
         } else {
             player
@@ -278,6 +296,7 @@ export default new AmethystCommand({
                     }
                 })
                 .catch(log4js.trace);
+            initiations.set(interaction.guild.id, interaction.user.id)
         }
 
         const handleQueue = async () => {
