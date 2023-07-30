@@ -3,6 +3,8 @@ import { colors } from '../contents/data.json';
 import { Track } from 'discord-player';
 import { data, msToSentence, pingChan, pingUser, plurial, resize } from '../utils/toolbox';
 import { userPingResolvable } from '../typings/types';
+import { AmethystCommand, preconditions } from 'amethystjs';
+import isDj from '../preconditions/isDj';
 
 const color = <Color extends keyof typeof colors>(color: Color): ColorResolvable => {
     return colors[color] as ColorResolvable;
@@ -239,3 +241,27 @@ export const playlistPlayed = (user: User, channel: VoiceChannel, addedToQueue?:
         );
 export const emptyPlaylist = (user: User) =>
     basic(user, { denied: true }).setTitle('Playlist vide').setDescription(`La playlist est vide`);
+export const help = (user: User) => basic(user, { accentColor: true })
+    .setThumbnail(user.client.user.displayAvatarURL())
+    .setTitle("Page d'aide")
+    .setDescription(`Voici la page d'aide de ${pingUser(user.client.user)}\n${user.client.chatInputCommands.map((cmd) => `\`/${cmd.options.name}\` : ${cmd.options.description}`).join('\n')}`)
+    .setFields(
+        {
+            name: 'Liens',
+            value: `[Serveur de support](${data('links', 'support')})\n[Invitation](${data('links', 'invite')})\n[Instagram](${data('links', 'instagram')})\nEmail : \`${data('links', 'email')}\`\n[Code source](https://github.com/Greensky-gs/audioli)`,
+            inline: false
+        }
+    )
+export const commandHelp = (user: User, { options, ...command }: AmethystCommand) => {
+    const checks: { condition: boolean; msg: string }[] = [
+        { condition: options.preconditions.includes(preconditions.GuildOnly), msg: 'être dans un serveur' },
+        { condition: options.preconditions.includes(isDj), msg: 'être DJ' },
+        { condition: options.preconditions.includes(preconditions.OwnerOnly), msg: 'être propriétaire du serveur' }
+    ]
+    const permissions = checks.filter(x => x.condition).map(x => x.msg);
+
+    const embed = basic(user, { accentColor: true })
+        .setTitle(`Commande ${options.name}`)
+        .setDescription(`Description : \`\`\`${options.description}\`\`\`\nPermissions : ${permissions.length === 0 ? 'Aucune permission' : permissions.join(', ')}`)
+    return embed;
+}
