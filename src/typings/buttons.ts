@@ -11,5 +11,8 @@ export type buttonOptions = {
 };
 export enum ButtonIds {
     Yes = 'yes',
-    No = 'no'
+    No = 'no',
+    DJListUsers = 'cmd.djs.list.users',
+    DJListRoles = 'cmd.djs.list.roles',
+    DJListMixed = 'cmd.djs.list'
 }

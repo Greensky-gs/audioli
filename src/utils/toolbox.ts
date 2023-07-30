@@ -8,6 +8,7 @@ import {
     ChannelType,
     Collection,
     Interaction,
+    Role,
     User
 } from 'discord.js';
 import datas from '../contents/data.json';
@@ -108,3 +109,4 @@ export const shuffle = <T>(array: T[]): T[] =>
         .map((value) => [Math.random(), value])
         .sort(([a]: any, [b]: any) => a - b)
         .map((entry) => entry[1]) as T[];
+export const pingRole = (role: string | Role) => `<@&${typeof role === 'string' ? role : role.id}>`

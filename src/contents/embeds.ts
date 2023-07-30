@@ -1,7 +1,7 @@
-import { ColorResolvable, EmbedBuilder, User, VoiceChannel } from 'discord.js';
+import { ColorResolvable, EmbedBuilder, Role, User, VoiceChannel } from 'discord.js';
 import { colors } from '../contents/data.json';
 import { Track } from 'discord-player';
-import { data, msToSentence, pingChan, pingUser, plurial, resize } from '../utils/toolbox';
+import { data, msToSentence, numerize, pingChan, pingRole, pingUser, plurial, resize } from '../utils/toolbox';
 import { userPingResolvable } from '../typings/types';
 import { AmethystCommand, preconditions } from 'amethystjs';
 import isDj from '../preconditions/isDj';
@@ -266,3 +266,22 @@ export const commandHelp = (user: User, { options, ...command }: AmethystCommand
     return embed;
 }
 export const stopped = (user: User) => basic(user, { accentColor: true }).setTitle("Musique arrêtée").setDescription(`La musique a été arrêtée`)
+
+// Embeds DJ
+export const djListUsersBase = (user: User, total: number) => basic(user, { accentColor: true }).setTitle("Liste des DJ").setDescription(`Voici la liste des DJ (${numerize(total)})\n`)
+export const emptyUsersDJ = (user: User) => basic(user, { accentColor: true }).setTitle("Liste des DJ").setDescription(`Il n'y a aucun DJ`)
+export const djListRolesBase = (user: User, total: number) => basic(user, { accentColor: true }).setTitle("Rôles de DJ").setDescription(`Voici la liste des rôles de DJ (${numerize(total)})\n`)
+export const emptyRolesDJ = (user: User) => basic(user, { accentColor: true }).setTitle("Rôles de DJ").setDescription(`Il n'y a aucun rôle de DJ`)
+export const djUserMapper = (embed: EmbedBuilder, value: { id: string; type: 'user' }) => embed.setDescription(`${embed.data.description}\n${pingUser(value.id)}`)
+export const djRoleMapper = (embed: EmbedBuilder, value: { id: string; type: 'role' }) => embed.setDescription(`${embed.data.description}\n${pingRole(value.id)}`)
+export const djListMixedBase = (user: User, total: number) => basic(user, { accentColor: true }).setTitle("Liste des DJ").setDescription(`Voici la liste des rôles de DJ et les DJ (${numerize(total)})\n`)
+export const emptyDjList = (user: User) => basic(user, { accentColor: true }).setTitle("Aucun DJ").setDescription(`La liste est complètement vide`)
+export const djMixMapper = (embed: EmbedBuilder, value: { id: string; type: 'user' | 'role' }) => embed.addFields({ name: value.type === 'role' ? 'Rôle' : 'Utilisateur', value: value.type === 'role' ? pingRole(value.id) : pingUser(value.id), inline: false })
+export const djListQuestion = (user: User) => basic(user, { question: true }).setTitle("Liste").setDescription(`Quelle liste voulez-vous voir ?`)
+export const djAdded = (user: User, value: { id: string; type: 'user' | 'role' }) => value.type === 'role' ? basic(user, { accentColor: true }).setTitle("Rôle DJ ajouté").setDescription(`Le rôle ${pingRole(value.id)} est maintenant un rôle de DJ`) : basic(user, { accentColor: true }).setTitle("DJ ajouté").setDescription(`${pingUser(value.id)} est maintenant un DJ`)
+export const djRemoved = (user: User, value: { id: string; type: 'user' | 'role' }) => value.type === 'role' ? basic(user, { accentColor: true }).setTitle("Rôle DJ retiré").setDescription(`Le rôle ${pingRole(value.id)} n'est plus un rôle de DJ`) : basic(user, { accentColor: true }).setTitle("DJ retiré").setDescription(`${pingUser(value.id)} n'est plus un DJ`)
+export const alreadyDJRole = (user: User, role: Role) => basic(user, { denied: true }).setTitle("Rôle enregistré").setDescription(`Le rôle ${pingRole(role)} est déjà un rôle de DJ`)
+export const alreadyDJUser = (user: User, dj: User) => basic(user, { denied: true }).setTitle("DJ enregistré").setDescription(`${pingUser(dj)} est déjà un DJ`)
+export const notDJRole = (user: User, role: Role) => basic(user, { denied: true }).setTitle("Rôle non enregistré").setDescription(`Le rôle ${pingRole(role)} n'est pas un rôle de DJ`)
+export const notDJUser = (user: User, dj: User) => basic(user, { denied: true }).setTitle("DJ non enregistré").setDescription(`${pingUser(dj)} n'est pas un DJ`)
+export const djNoOptions = (user: User) => basic(user, { denied: true }).setDescription("Vous n'avez précisé aucune option").setTitle(`Aucune option`)
