@@ -221,7 +221,21 @@ export const notShared = (user: User, target: userPingResolvable) =>
     basic(user, { denied: true })
         .setTitle('Non partagée')
         .setDescription(`La playlist n'est pas partagée à ${pingUser(target)}`);
-export const songNotInPlaylist = (user: User) => basic(user, { denied: true }).setTitle("Chanson invalide").setDescription(`Cette musique n'est pas dans la playlist`)
-export const playPlaylistFirstNotFound = (user: User) => basic(user, { denied: true }).setTitle("Musique introuvable").setDescription(`Je n'ai pas pu trouver la musique à jouer`)
-export const playlistPlayed = (user: User, channel: VoiceChannel, addedToQueue?: boolean) => basic(user, { accentColor: true }).setTitle(`Playlist ${!!addedToQueue ? 'ajoutée' : 'jouée'}`).setDescription(`La playlist ${!!addedToQueue ? `a été ajouté dans la liste de lecture` : `va être jouée dans ${pingChan(channel)}`}`)
-export const emptyPlaylist = (user: User) => basic(user, { denied: true }).setTitle("Playlist vide").setDescription(`La playlist est vide`)
+export const songNotInPlaylist = (user: User) =>
+    basic(user, { denied: true })
+        .setTitle('Chanson invalide')
+        .setDescription(`Cette musique n'est pas dans la playlist`);
+export const playPlaylistFirstNotFound = (user: User) =>
+    basic(user, { denied: true })
+        .setTitle('Musique introuvable')
+        .setDescription(`Je n'ai pas pu trouver la musique à jouer`);
+export const playlistPlayed = (user: User, channel: VoiceChannel, addedToQueue?: boolean) =>
+    basic(user, { accentColor: true })
+        .setTitle(`Playlist ${!!addedToQueue ? 'ajoutée' : 'jouée'}`)
+        .setDescription(
+            `La playlist ${
+                !!addedToQueue ? `a été ajouté dans la liste de lecture` : `va être jouée dans ${pingChan(channel)}`
+            }`
+        );
+export const emptyPlaylist = (user: User) =>
+    basic(user, { denied: true }).setTitle('Playlist vide').setDescription(`La playlist est vide`);

@@ -223,19 +223,19 @@ export default new AmethystCommand({
         },
         {
             name: 'déplacer',
-            description: "Déplace une musique dans la playlist",
+            description: 'Déplace une musique dans la playlist',
             type: ApplicationCommandOptionType.Subcommand,
             options: [
                 {
                     name: 'playlist',
                     required: true,
                     type: ApplicationCommandOptionType.String,
-                    description: "Playlist que vous voulez modifier",
+                    description: 'Playlist que vous voulez modifier',
                     autocomplete: true
                 },
                 {
                     name: 'musique',
-                    description: "Musique que vous voulez déplacer",
+                    description: 'Musique que vous voulez déplacer',
                     autocomplete: true,
                     required: true,
                     type: ApplicationCommandOptionType.String
@@ -258,7 +258,7 @@ export default new AmethystCommand({
                 },
                 {
                     name: 'rapport',
-                    description: "Musique par rapport à laquelle vous voulez la positionner",
+                    description: 'Musique par rapport à laquelle vous voulez la positionner',
                     type: ApplicationCommandOptionType.String,
                     required: true,
                     autocomplete: true
@@ -270,34 +270,42 @@ export default new AmethystCommand({
     const cmd = options.getSubcommand();
 
     if (cmd === 'déplacer') {
-        const playlist = playlists.getAbsolute(parseInt(options.getString('playlist')))
-        const musicId = options.getString('musique')
-        const rapportId = options.getString('rapport')
+        const playlist = playlists.getAbsolute(parseInt(options.getString('playlist')));
+        const musicId = options.getString('musique');
+        const rapportId = options.getString('rapport');
         const direction = options.getString('position') as 'before' | 'after';
 
-        if ([musicId, rapportId].some(x => !playlist.songs.find(y => y.id === x))) return interaction.reply({
-            embeds: [ songNotInPlaylist(interaction.user) ],
-            ephemeral: true
-        }).catch(log4js.trace)
+        if ([musicId, rapportId].some((x) => !playlist.songs.find((y) => y.id === x)))
+            return interaction
+                .reply({
+                    embeds: [songNotInPlaylist(interaction.user)],
+                    ephemeral: true
+                })
+                .catch(log4js.trace);
 
-        const music = playlist.songs.find(x => x.id === musicId)
-        const rapport = playlist.songs.find(x => x.id === rapportId)
+        const music = playlist.songs.find((x) => x.id === musicId);
+        const rapport = playlist.songs.find((x) => x.id === rapportId);
 
-        if (musicId === rapportId) return interaction.reply({
-            embeds: [ moveSameSong(interaction.user) ],
-            ephemeral: true
-        }).catch(log4js.trace)
+        if (musicId === rapportId)
+            return interaction
+                .reply({
+                    embeds: [moveSameSong(interaction.user)],
+                    ephemeral: true
+                })
+                .catch(log4js.trace);
 
         playlists.move({
             playlist: playlist.id,
             direction,
             song: music.id,
             rapport: rapport.id
-        })
+        });
 
-        interaction.reply({
-            embeds: [ moved(interaction.user, music as unknown as Track) ]
-        }).catch(log4js.trace)
+        interaction
+            .reply({
+                embeds: [moved(interaction.user, music as unknown as Track)]
+            })
+            .catch(log4js.trace);
     }
     if (cmd === 'créer') {
         const name = options.getString('nom');
@@ -496,13 +504,13 @@ export default new AmethystCommand({
 
         const _infos: Track[] = [];
         const promisifier = async (song: { id: string; title: string; url: string }) => {
-            return new Promise(async(resolve) => {
+            return new Promise(async (resolve) => {
                 const details = await player.search(song.url).catch(log4js.trace);
                 if (!details) return resolve(null);
-    
+
                 _infos.push(details?.tracks[0]);
                 return resolve(details);
-            })
+            });
         };
         await Promise.all(playlist.songs.slice(0, 29).map(promisifier));
 
@@ -510,7 +518,10 @@ export default new AmethystCommand({
             return _infos.filter((x) => !!x);
         };
         if (infos().length > 0) {
-            embed.setThumbnail(infos().find(x => x.url === playlist.songs[0].url)?.thumbnail ?? interaction.client.user.displayAvatarURL());
+            embed.setThumbnail(
+                infos().find((x) => x.url === playlist.songs[0].url)?.thumbnail ??
+                    interaction.client.user.displayAvatarURL()
+            );
         }
 
         if (infos().length > 0) {
@@ -676,18 +687,24 @@ export default new AmethystCommand({
             .catch(log4js.trace);
     }
     if (cmd === 'retirer') {
-        const playlist = playlists.getAbsolute(parseInt(options.getString('playlist')))
-        const songId = options.getString('musique')
+        const playlist = playlists.getAbsolute(parseInt(options.getString('playlist')));
+        const songId = options.getString('musique');
 
-        if (!playlist) return interaction.reply({
-            embeds: [error(interaction.user)],
-            ephemeral: true
-        }).catch(log4js.trace)
+        if (!playlist)
+            return interaction
+                .reply({
+                    embeds: [error(interaction.user)],
+                    ephemeral: true
+                })
+                .catch(log4js.trace);
 
-        if (!playlist.songs.find(x => x.id === songId)) return interaction.reply({
-            embeds: [ songNotInPlaylist(interaction.user) ],
-            ephemeral: true
-        }).catch(log4js.trace)
+        if (!playlist.songs.find((x) => x.id === songId))
+            return interaction
+                .reply({
+                    embeds: [songNotInPlaylist(interaction.user)],
+                    ephemeral: true
+                })
+                .catch(log4js.trace);
 
         playlists.removeFromPlaylist({
             userId: interaction.user.id,
@@ -695,8 +712,10 @@ export default new AmethystCommand({
             song: songId
         });
 
-        interaction.reply({
-            embeds: [ songRemoved(interaction.user) ]
-        }).catch(log4js.trace)
+        interaction
+            .reply({
+                embeds: [songRemoved(interaction.user)]
+            })
+            .catch(log4js.trace);
     }
 });

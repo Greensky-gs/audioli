@@ -59,7 +59,7 @@ export class PlaylistManager {
     }: {
         userId: string;
         playlist: number;
-        song: { id: string; title: string; url: string; };
+        song: { id: string; title: string; url: string };
     }) {
         if (!this.exists(playlist, userId)) return 'user has not playlist with this is';
         const list = this.getPlaylist(userId, playlist);
@@ -152,7 +152,7 @@ export class PlaylistManager {
         emoji = null
     }: {
         user: string;
-        songs?: { id: string; title: string; url: string; }[];
+        songs?: { id: string; title: string; url: string }[];
         name: string;
         emoji?: string;
     }) {
@@ -177,29 +177,44 @@ export class PlaylistManager {
 
         return this._cache.get(res.insertId);
     }
-    public move({ playlist, song, rapport, direction }: { playlist: number; song: string; rapport: string; direction: 'before' | 'after' }) {
-        if (!this.exists(playlist)) return 'unexisting'
-        const list = this.getAbsolute(playlist)
+    public move({
+        playlist,
+        song,
+        rapport,
+        direction
+    }: {
+        playlist: number;
+        song: string;
+        rapport: string;
+        direction: 'before' | 'after';
+    }) {
+        if (!this.exists(playlist)) return 'unexisting';
+        const list = this.getAbsolute(playlist);
 
-        if (!list.songs.find(x => x.id === song)) return 'song not included'
-        if (!list.songs.find(x => x.id === rapport)) return 'rapport not included'
-        if (song === rapport) return 'same'
+        if (!list.songs.find((x) => x.id === song)) return 'song not included';
+        if (!list.songs.find((x) => x.id === rapport)) return 'rapport not included';
+        if (song === rapport) return 'same';
 
         const indexed = list.songs.map((x, i) => ({ ...x, index: i }));
-        const sIndex = indexed.find(x => x.id === song).index
-        const rIndex = indexed.find(x => x.id === rapport).index
+        const sIndex = indexed.find((x) => x.id === song).index;
+        const rIndex = indexed.find((x) => x.id === rapport).index;
 
-        const firstPart = indexed.filter(x => direction === 'after' ? (x.index <= rIndex) : (x.index < rIndex));
-        const secondPart = indexed.filter(x => direction === 'after' ? (x.index > rIndex) : (x.index >= rIndex))
+        const firstPart = indexed.filter((x) => (direction === 'after' ? x.index <= rIndex : x.index < rIndex));
+        const secondPart = indexed.filter((x) => (direction === 'after' ? x.index > rIndex : x.index >= rIndex));
 
-        const filter = (x: (typeof indexed[0])[]) => x.filter(y => y.id !== song)
+        const filter = (x: (typeof indexed)[0][]) => x.filter((y) => y.id !== song);
 
-        const final = [ ...filter(firstPart), list.songs.find(x => x.id === song), ...filter(secondPart) ];
+        const final = [...filter(firstPart), list.songs.find((x) => x.id === song), ...filter(secondPart)];
 
         list.songs = final;
-        this._cache.set(list.id, list)
+        this._cache.set(list.id, list);
 
-        query(`UPDATE ${DatabaseTables.Playlists} SET songs='${JSON.stringify(final).replace(/'/g, "\\'")}' WHERE id='${playlist}'`)
+        query(
+            `UPDATE ${DatabaseTables.Playlists} SET songs='${JSON.stringify(final).replace(
+                /'/g,
+                "\\'"
+            )}' WHERE id='${playlist}'`
+        );
     }
 
     private async checkDb() {

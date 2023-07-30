@@ -103,4 +103,8 @@ export const getNode = (node: NodeResolvable | BaseInteraction) => {
 };
 export const pingUser = (user: userPingResolvable) =>
     typeof user === 'string' ? `<@${user}>` : `<@${user instanceof User ? user.id : user?.user?.id}>`;
-export const shuffle = <T>(array: T[]): T[] => array.map(value => [Math.random(), value]).sort(([a]: any, [b]: any) => a - b).map(entry => entry[1]) as T[]
+export const shuffle = <T>(array: T[]): T[] =>
+    array
+        .map((value) => [Math.random(), value])
+        .sort(([a]: any, [b]: any) => a - b)
+        .map((entry) => entry[1]) as T[];

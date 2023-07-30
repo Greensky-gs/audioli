@@ -3,8 +3,10 @@ import playlists from '../cache/playlists';
 
 export default new AutocompleteListener({
     listenerName: 'remove song from playlist',
-    commandName: [{ commandName: 'playlists', optionName: 'musique' },
-    { commandName: 'playlists', optionName: 'rapport' }],
+    commandName: [
+        { commandName: 'playlists', optionName: 'musique' },
+        { commandName: 'playlists', optionName: 'rapport' }
+    ],
     run: ({ focusedValue, interaction }) => {
         const allSongs = playlists
             .getUserLists(interaction.user.id)
