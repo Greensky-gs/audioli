@@ -1,6 +1,6 @@
 import { ChannelType, ColorResolvable, EmbedBuilder, Guild, PermissionsString, Role, User, VoiceChannel } from 'discord.js';
 import { colors, configTypes } from '../contents/data.json';
-import { Track } from 'discord-player';
+import { GuildQueue, Track } from 'discord-player';
 import { data, getConfig, msToSentence, numerize, pingChan, pingRole, pingUser, plurial, resize } from '../utils/toolbox';
 import { userPingResolvable } from '../typings/types';
 import { AmethystCommand, preconditions } from 'amethystjs';
@@ -61,7 +61,7 @@ export const noVoiceChannel = (user: User) =>
 export const noTracks = (user: User) =>
     basic(user, { denied: true })
         .setTitle('Pas de musique')
-        .setDescription(`Aucune musique n'a été trouvée.\nRéessayez avec une recherche plus générale`);
+        .setDescription(`Aucune musique n'a été trouvée.`);
 export const multipleTracks = (user: User) =>
     basic(user, { question: true })
         .setTitle('Plusieurs musiques')
@@ -443,3 +443,19 @@ export const viewConfig = (user: User, guild: Guild, key?: configKey) => {
     })
     return embed
 }
+export const current = (user: User, node: GuildQueue) => {
+    const track = node.node.queue.currentTrack;
+
+    const embed = basic(user, { accentColor: true }).setTitle("Musique Actuelle").setDescription(`Vous écoutez [**${track.title}** par ${track.author}](${track.url})\n\n${node.node.createProgressBar()}`)
+    .setURL(track.url)
+    .setThumbnail(track.thumbnail ?? user.client.user.displayAvatarURL())
+
+    if (node.node.queue.size > 0) embed.addFields({
+        name: 'À suivre',
+        value: `${numerize(node.node.queue.size)} musique${plurial(node.node.queue.size)} à suivre`,
+        inline: false
+    })
+
+    return embed
+}
+export const noPlaylist = (user: User) => basic(user, { denied: true }).setTitle("Pas de playlist").setDescription(`Vous n'avez aucune playlist pour ajouter cette chanson`)

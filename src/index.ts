@@ -15,7 +15,8 @@ export const client = new AmethystClient(
         preconditionsFolder: './dist/preconditions',
         autocompleteListenersFolder: './dist/autocompletes',
         debug: true,
-        prefix: 'au!'
+        prefix: 'au!',
+        buttonsFolder: './dist/buttons'
     }
 );
 

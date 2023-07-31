@@ -14,5 +14,6 @@ export enum ButtonIds {
     No = 'no',
     DJListUsers = 'cmd.djs.list.users',
     DJListRoles = 'cmd.djs.list.roles',
-    DJListMixed = 'cmd.djs.list'
+    DJListMixed = 'cmd.djs.list',
+    AddToPlaylist = 'action.addToPlaylist'
 }
