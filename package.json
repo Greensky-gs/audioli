@@ -6,6 +6,7 @@
   "dependencies": {
     "@discord-player/extractor": "^4.4.0",
     "@discordjs/opus": "^0.9.0",
+    "@distube/ytdl-core": "^4.11.17",
     "@types/mysql": "^2.15.21",
     "@types/string-similarity": "^4.0.0",
     "amethystjs": "^1.6.2",
@@ -18,7 +19,7 @@
     "string-similarity": "^4.0.4",
     "tsc": "^2.0.4",
     "typescript": "^5.1.6",
-    "ytdl-core": "^4.11.4"
+    "ytdl-core": "^4.9.1"
   },
   "scripts": {
     "build": "yarn tsc -b",

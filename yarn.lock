@@ -135,6 +135,16 @@
     tslib "^2.5.0"
     ws "^8.13.0"
 
+"@distube/ytdl-core@^4.11.17":
+  version "4.11.17"
+  resolved "https://registry.yarnpkg.com/@distube/ytdl-core/-/ytdl-core-4.11.17.tgz#9dcfa87f929197f0f4782afdc40d9820f840f87c"
+  integrity sha512-XHRYxC9hR94GBxfy/SiGjnCbe7AuB1YqTAfD3CxOfdGkW5I2AXbDLHIVsjKLTUNHT3CkVvh3Q99SRM0T2cKdSw==
+  dependencies:
+    m3u8stream "^0.8.6"
+    miniget "^4.2.3"
+    sax "^1.2.4"
+    undici "^5.22.1"
+
 "@sapphire/async-queue@^1.5.0":
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/@sapphire/async-queue/-/async-queue-1.5.0.tgz#2f255a3f186635c4fb5a2381e375d3dfbc5312d8"
@@ -654,7 +664,7 @@ make-dir@^3.1.0:
   dependencies:
     semver "^6.0.0"
 
-miniget@^4.2.2:
+miniget@^4.2.2, miniget@^4.2.3:
   version "4.2.3"
   resolved "https://registry.yarnpkg.com/miniget/-/miniget-4.2.3.tgz#3707a24c7c11c25d359473291638ab28aab349bd"
   integrity sha512-SjbDPDICJ1zT+ZvQwK0hUcRY4wxlhhNpHL9nJOB2MEAXRGagTljsO8MEDzQMTFf0Q8g4QNi8P9lEm/g7e+qgzA==
@@ -1093,7 +1103,7 @@ youtube-sr@^4.3.4:
   resolved "https://registry.yarnpkg.com/youtube-sr/-/youtube-sr-4.3.4.tgz#cbd2d446de2b0c43f5dd3ea5333222a327eddaf0"
   integrity sha512-olSYcR80XigutCrePEXBX3/RJJrWfonJQj7+/ggBiWU0CzTDLE1q8+lpWTWCG0JpzhzILp/IB/Bq/glGqqr1TQ==
 
-ytdl-core@^4.11.4:
+ytdl-core@^4.9.1:
   version "4.11.5"
   resolved "https://registry.yarnpkg.com/ytdl-core/-/ytdl-core-4.11.5.tgz#8cc3dc9e4884e24e8251250cfb56313a300811f0"
   integrity sha512-27LwsW4n4nyNviRCO1hmr8Wr5J1wLLMawHCQvH8Fk0hiRqrxuIu028WzbJetiYH28K8XDbeinYW4/wcHQD1EXA==
