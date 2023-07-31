@@ -18,7 +18,7 @@
     "string-similarity": "^4.0.4",
     "tsc": "^2.0.4",
     "typescript": "^5.1.6",
-    "ytdl-core": "^4.11.5"
+    "ytdl-core": "^4.11.4"
   },
   "scripts": {
     "build": "yarn tsc -b",
