@@ -642,8 +642,8 @@ export default new AmethystCommand({
                                 .setPlaceholder('Choisissez une musique')
                                 .setOptions(
                                     res.tracks.slice(0, 24).map((tr) => ({
-                                        label: tr.title,
-                                        description: tr.author ?? 'Auteur inconnu',
+                                        label: resize(tr.title, 100),
+                                        description: resize(tr.author ?? 'Auteur inconnu', 100),
                                         value: tr.id
                                     }))
                                 )

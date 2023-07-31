@@ -21,7 +21,7 @@ import {
     playlistPlayed
 } from '../contents/embeds';
 import player from '../cache/player';
-import { row, shuffle as shuffleArray } from '../utils/toolbox';
+import { resize, row, shuffle as shuffleArray } from '../utils/toolbox';
 import configs from '../cache/configs';
 import { Track } from 'discord-player';
 import { compareTwoStrings } from 'string-similarity';
@@ -211,8 +211,8 @@ export default new AmethystCommand({
                                 .setPlaceholder('Choisissez une musique')
                                 .setOptions(
                                     res.tracks.slice(0, 24).map((tr) => ({
-                                        label: tr.title,
-                                        description: tr.author ?? 'Auteur inconnu',
+                                        label: resize(tr.title, 100),
+                                        description: resize(tr.author ?? 'Auteur inconnu', 100),
                                         value: tr.id
                                     }))
                                 )
