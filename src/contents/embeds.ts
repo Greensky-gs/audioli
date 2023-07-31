@@ -1,7 +1,26 @@
-import { ChannelType, ColorResolvable, EmbedBuilder, Guild, PermissionsString, Role, User, VoiceChannel } from 'discord.js';
+import {
+    ChannelType,
+    ColorResolvable,
+    EmbedBuilder,
+    Guild,
+    PermissionsString,
+    Role,
+    User,
+    VoiceChannel
+} from 'discord.js';
 import { colors, configTypes } from '../contents/data.json';
 import { GuildQueue, Track } from 'discord-player';
-import { data, getConfig, msToSentence, numerize, pingChan, pingRole, pingUser, plurial, resize } from '../utils/toolbox';
+import {
+    data,
+    getConfig,
+    msToSentence,
+    numerize,
+    pingChan,
+    pingRole,
+    pingUser,
+    plurial,
+    resize
+} from '../utils/toolbox';
 import { userPingResolvable } from '../typings/types';
 import { AmethystCommand, preconditions } from 'amethystjs';
 import isDj from '../preconditions/isDj';
@@ -59,9 +78,7 @@ export const noVoiceChannel = (user: User) =>
             `Je n'ai trouvé aucun salon vocal valide.\nRéessayez en vous connectant à un salon ou en indiquant le salon dans lequel vous voulez que je joue de la musique`
         );
 export const noTracks = (user: User) =>
-    basic(user, { denied: true })
-        .setTitle('Pas de musique')
-        .setDescription(`Aucune musique n'a été trouvée.`);
+    basic(user, { denied: true }).setTitle('Pas de musique').setDescription(`Aucune musique n'a été trouvée.`);
 export const multipleTracks = (user: User) =>
     basic(user, { question: true })
         .setTitle('Plusieurs musiques')
@@ -374,8 +391,16 @@ export const missingPerms = (user: User, perms: PermissionsString[]) =>
                           .join(', ')} pour faire cette commande`
             }`
         );
-export const invalidRole = (user: User) => basic(user, { denied: true }).setTitle("Rôle invalide").setDescription(`Ce n'est pas un rôle valide`)
-export const configInfo = (user: User, config: config<configKey>) => basic(user, { accentColor: true }).setTitle("Informations de paramètre").setDescription(`Nom du paramètre : ${config.name}\n\`\`\`${config.description}\`\`\`\nParamètre de type : ${configTypes[Object.keys(configTypes).find(x => x === config.type) as keyof typeof configTypes].name.toLowerCase()}`)
+export const invalidRole = (user: User) =>
+    basic(user, { denied: true }).setTitle('Rôle invalide').setDescription(`Ce n'est pas un rôle valide`);
+export const configInfo = (user: User, config: config<configKey>) =>
+    basic(user, { accentColor: true })
+        .setTitle('Informations de paramètre')
+        .setDescription(
+            `Nom du paramètre : ${config.name}\n\`\`\`${config.description}\`\`\`\nParamètre de type : ${configTypes[
+                Object.keys(configTypes).find((x) => x === config.type) as keyof typeof configTypes
+            ].name.toLowerCase()}`
+        );
 export const invalidChannelType = (user: User, accepted: ChannelType[]) => {
     const vals: Record<ChannelType, string> = {
         10: "fil d'annonce",
@@ -400,62 +425,91 @@ export const invalidChannelType = (user: User, accepted: ChannelType[]) => {
                 .join(', ')}`
         );
 };
-export const channelNotFound = (user: User) => basic(user, { denied: true }).setTitle("Salon introuvable").setDescription(`Je n'ai pas pu trouver le salon auquel vous faites référence.\nVeuillez réessayer.\nSi ce message continue de s'afficher, contactez le [support](${data('links', 'support')})`)
+export const channelNotFound = (user: User) =>
+    basic(user, { denied: true })
+        .setTitle('Salon introuvable')
+        .setDescription(
+            `Je n'ai pas pu trouver le salon auquel vous faites référence.\nVeuillez réessayer.\nSi ce message continue de s'afficher, contactez le [support](${data(
+                'links',
+                'support'
+            )})`
+        );
 export const viewConfig = (user: User, guild: Guild, key?: configKey) => {
-    const displayConfig = (config: config<configKey>, value: string | number | boolean, { stringMaxLength = 3200, bold = false }: { stringMaxLength?: number; bold?: boolean }) => {
-        const boldize = (str: string) => bold ? `**${str}**` : str
+    const displayConfig = (
+        config: config<configKey>,
+        value: string | number | boolean,
+        { stringMaxLength = 3200, bold = false }: { stringMaxLength?: number; bold?: boolean }
+    ) => {
+        const boldize = (str: string) => (bold ? `**${str}**` : str);
 
         return config.type === 'boolean'
-        ? boldize(value ? 'activé' : 'désactivé')
-        : config.type === 'role'
-        ? pingRole(value as string)
-        : config.type === 'channel'
-        ? pingChan(value as string)
-        : config.type === 'number'
-        ? boldize(`${numerize(value as number)}`)
-        : config.type === 'customstring'
-        ? `\`${value}\``
-        : config.type === 'string'
-        ? `\`\`\`${resize(value as string, stringMaxLength)}\`\`\``
-        : config.type === 'time'
-        ? msToSentence(value as number)
-        : 'N/A'
-    }
+            ? boldize(value ? 'activé' : 'désactivé')
+            : config.type === 'role'
+            ? pingRole(value as string)
+            : config.type === 'channel'
+            ? pingChan(value as string)
+            : config.type === 'number'
+            ? boldize(`${numerize(value as number)}`)
+            : config.type === 'customstring'
+            ? `\`${value}\``
+            : config.type === 'string'
+            ? `\`\`\`${resize(value as string, stringMaxLength)}\`\`\``
+            : config.type === 'time'
+            ? msToSentence(value as number)
+            : 'N/A';
+    };
     if (getConfig(key) && !!guild) {
-        const config = getConfig(key)
+        const config = getConfig(key);
         const value = configs.getconfig(guild.id, key);
 
-        return basic(user, { accentColor: true }).setTitle("Paramètre").setDescription(`Le paramètre **${config.name}** est configuré sur ${displayConfig(config, value, { bold: true })}`)
+        return basic(user, { accentColor: true })
+            .setTitle('Paramètre')
+            .setDescription(
+                `Le paramètre **${config.name}** est configuré sur ${displayConfig(config, value, { bold: true })}`
+            );
     }
 
-    const embed = basic(user, { accentColor: true }).setTitle("Paramètres").setDescription(`Voici la liste des configurations du serveur`)
+    const embed = basic(user, { accentColor: true })
+        .setTitle('Paramètres')
+        .setDescription(`Voici la liste des configurations du serveur`);
 
-    const list = configs.getConfigs(guild.id)
-    Object.keys(list).filter(x => x !== 'guild_id').forEach((k: configKey) => {
-        const config = getConfig(k)
-        const value = list[k]
+    const list = configs.getConfigs(guild.id);
+    Object.keys(list)
+        .filter((x) => x !== 'guild_id')
+        .forEach((k: configKey) => {
+            const config = getConfig(k);
+            const value = list[k];
 
-        if ((embed.data?.fields?.length ?? 0) < 25) embed.addFields({
-            name: config.name[0].toUpperCase() + config.name.slice(1),
-            value: displayConfig(config, value, { stringMaxLength: 300 }),
-            inline: false
-        })
-    })
-    return embed
-}
+            if ((embed.data?.fields?.length ?? 0) < 25)
+                embed.addFields({
+                    name: config.name[0].toUpperCase() + config.name.slice(1),
+                    value: displayConfig(config, value, { stringMaxLength: 300 }),
+                    inline: false
+                });
+        });
+    return embed;
+};
 export const current = (user: User, node: GuildQueue) => {
     const track = node.node.queue.currentTrack;
 
-    const embed = basic(user, { accentColor: true }).setTitle("Musique Actuelle").setDescription(`Vous écoutez [**${track.title}** par ${track.author}](${track.url})\n\n${node.node.createProgressBar()}`)
-    .setURL(track.url)
-    .setThumbnail(track.thumbnail ?? user.client.user.displayAvatarURL())
+    const embed = basic(user, { accentColor: true })
+        .setTitle('Musique Actuelle')
+        .setDescription(
+            `Vous écoutez [**${track.title}** par ${track.author}](${track.url})\n\n${node.node.createProgressBar()}`
+        )
+        .setURL(track.url)
+        .setThumbnail(track.thumbnail ?? user.client.user.displayAvatarURL());
 
-    if (node.node.queue.size > 0) embed.addFields({
-        name: 'À suivre',
-        value: `${numerize(node.node.queue.size)} musique${plurial(node.node.queue.size)} à suivre`,
-        inline: false
-    })
+    if (node.node.queue.size > 0)
+        embed.addFields({
+            name: 'À suivre',
+            value: `${numerize(node.node.queue.size)} musique${plurial(node.node.queue.size)} à suivre`,
+            inline: false
+        });
 
-    return embed
-}
-export const noPlaylist = (user: User) => basic(user, { denied: true }).setTitle("Pas de playlist").setDescription(`Vous n'avez aucune playlist pour ajouter cette chanson`)
+    return embed;
+};
+export const noPlaylist = (user: User) =>
+    basic(user, { denied: true })
+        .setTitle('Pas de playlist')
+        .setDescription(`Vous n'avez aucune playlist pour ajouter cette chanson`);

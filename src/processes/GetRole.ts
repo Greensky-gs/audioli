@@ -41,9 +41,7 @@ export default new Process(
                 if (!role)
                     return SendAndDelete.process(
                         {
-                            embeds: [
-                                invalidRole(user)
-                            ]
+                            embeds: [invalidRole(user)]
                         },
                         message.channel as TextChannel
                     );
