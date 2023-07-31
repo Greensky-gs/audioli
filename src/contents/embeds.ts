@@ -1,10 +1,12 @@
-import { ColorResolvable, EmbedBuilder, PermissionsString, Role, User, VoiceChannel } from 'discord.js';
-import { colors } from '../contents/data.json';
+import { ChannelType, ColorResolvable, EmbedBuilder, Guild, PermissionsString, Role, User, VoiceChannel } from 'discord.js';
+import { colors, configTypes } from '../contents/data.json';
 import { Track } from 'discord-player';
-import { data, msToSentence, numerize, pingChan, pingRole, pingUser, plurial, resize } from '../utils/toolbox';
+import { data, getConfig, msToSentence, numerize, pingChan, pingRole, pingUser, plurial, resize } from '../utils/toolbox';
 import { userPingResolvable } from '../typings/types';
 import { AmethystCommand, preconditions } from 'amethystjs';
 import isDj from '../preconditions/isDj';
+import { config, configKey } from '../typings/configs';
+import configs from '../cache/configs';
 
 const color = <Color extends keyof typeof colors>(color: Color): ColorResolvable => {
     return colors[color] as ColorResolvable;
@@ -372,3 +374,72 @@ export const missingPerms = (user: User, perms: PermissionsString[]) =>
                           .join(', ')} pour faire cette commande`
             }`
         );
+export const invalidRole = (user: User) => basic(user, { denied: true }).setTitle("Rôle invalide").setDescription(`Ce n'est pas un rôle valide`)
+export const configInfo = (user: User, config: config<configKey>) => basic(user, { accentColor: true }).setTitle("Informations de paramètre").setDescription(`Nom du paramètre : ${config.name}\n\`\`\`${config.description}\`\`\`\nParamètre de type : ${configTypes[Object.keys(configTypes).find(x => x === config.type) as keyof typeof configTypes].name.toLowerCase()}`)
+export const invalidChannelType = (user: User, accepted: ChannelType[]) => {
+    const vals: Record<ChannelType, string> = {
+        10: "fil d'annonce",
+        1: 'messages privés',
+        3: 'groupe privé',
+        5: 'annonces',
+        4: 'catégorie',
+        14: 'catégorie',
+        15: 'forum',
+        12: 'fil privé',
+        11: 'fil public',
+        13: 'conférences',
+        0: 'textuel',
+        2: 'vocal'
+    };
+
+    return basic(user, { denied: true })
+        .setTitle('Type de salon invalide')
+        .setDescription(
+            `Ce n'est pas un salon valide, veuillez spécifier un salon de type : ${accepted
+                .map((x) => vals[x])
+                .join(', ')}`
+        );
+};
+export const channelNotFound = (user: User) => basic(user, { denied: true }).setTitle("Salon introuvable").setDescription(`Je n'ai pas pu trouver le salon auquel vous faites référence.\nVeuillez réessayer.\nSi ce message continue de s'afficher, contactez le [support](${data('links', 'support')})`)
+export const viewConfig = (user: User, guild: Guild, key?: configKey) => {
+    const displayConfig = (config: config<configKey>, value: string | number | boolean, { stringMaxLength = 3200, bold = false }: { stringMaxLength?: number; bold?: boolean }) => {
+        const boldize = (str: string) => bold ? `**${str}**` : str
+
+        return config.type === 'boolean'
+        ? boldize(value ? 'activé' : 'désactivé')
+        : config.type === 'role'
+        ? pingRole(value as string)
+        : config.type === 'channel'
+        ? pingChan(value as string)
+        : config.type === 'number'
+        ? boldize(`${numerize(value as number)}`)
+        : config.type === 'customstring'
+        ? `\`${value}\``
+        : config.type === 'string'
+        ? `\`\`\`${resize(value as string, stringMaxLength)}\`\`\``
+        : config.type === 'time'
+        ? msToSentence(value as number)
+        : 'N/A'
+    }
+    if (getConfig(key) && !!guild) {
+        const config = getConfig(key)
+        const value = configs.getconfig(guild.id, key);
+
+        return basic(user, { accentColor: true }).setTitle("Paramètre").setDescription(`Le paramètre **${config.name}** est configuré sur ${displayConfig(config, value, { bold: true })}`)
+    }
+
+    const embed = basic(user, { accentColor: true }).setTitle("Paramètres").setDescription(`Voici la liste des configurations du serveur`)
+
+    const list = configs.getConfigs(guild.id)
+    Object.keys(list).filter(x => x !== 'guild_id').forEach((k: configKey) => {
+        const config = getConfig(k)
+        const value = list[k]
+
+        if ((embed.data?.fields?.length ?? 0) < 25) embed.addFields({
+            name: config.name[0].toUpperCase() + config.name.slice(1),
+            value: displayConfig(config, value, { stringMaxLength: 300 }),
+            inline: false
+        })
+    })
+    return embed
+}

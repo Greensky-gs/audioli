@@ -1,12 +1,13 @@
 import { AmethystCommand, log4js, preconditions, waitForInteraction, waitForMessage } from 'amethystjs';
-import { ApplicationCommandOptionType, ComponentType, Message, StringSelectMenuBuilder, TextChannel } from 'discord.js';
-import { additionalCustomStringType, additionalNumberType, configKey } from '../typings/configs';
-import { button, data, getConfig, msToSentence, numerize, resize, row } from '../utils/toolbox';
-import { cancel, classic, invalidNumber } from '../contents/embeds';
+import { ApplicationCommandOptionType, ChannelSelectMenuBuilder, ChannelType, ComponentType, Message, StringSelectMenuBuilder, TextChannel } from 'discord.js';
+import { additionalChannelType, additionalCustomStringType, additionalNumberType, configKey } from '../typings/configs';
+import { button, data, getConfig, msToSentence, numerize, pingChan, pingRole, resize, row } from '../utils/toolbox';
+import { cancel, channelNotFound, classic, configInfo, invalidChannelType, invalidNumber, viewConfig, wait } from '../contents/embeds';
 import { ButtonIds } from '../typings/buttons';
 import configs from '../cache/configs';
 import SendAndDelete from '../processes/SendAndDelete';
 import GetTime from '../processes/GetTime';
+import GetRole from '../processes/GetRole';
 
 export default new AmethystCommand({
     name: 'paramètres',
@@ -27,11 +28,59 @@ export default new AmethystCommand({
                     autocomplete: true
                 }
             ]
+        },
+        {
+            name: 'informations',
+            description: "Affiche les informations d'un paramètre",
+            type: ApplicationCommandOptionType.Subcommand,
+            options: [
+                {
+                    name: 'paramètre',
+                    description: "Paramètre dont vous voulez les informations",
+                    required: true,
+                    autocomplete: true,
+                    type: ApplicationCommandOptionType.String
+                }
+            ]
+        },
+        {
+            name: 'voir',
+            description: "Affiche les paramètres",
+            type: ApplicationCommandOptionType.Subcommand,
+            options: [
+                {
+                    name: 'paramètre',
+                    required: false,
+                    description: "Paramètre que vous voulez voir",
+                    autocomplete: true,
+                    type: ApplicationCommandOptionType.String
+                }
+            ]
         }
     ]
 }).setChatInputRun(async ({ interaction, options }) => {
     const cmd = options.getSubcommand();
 
+    if (cmd === 'voir') {
+        const key = options.getString('paramètre') as configKey;
+
+        if (getConfig(key)) {
+            return interaction.reply({
+                embeds: [ viewConfig(interaction.user, interaction.guild, key)]
+            }).catch(log4js.trace)
+        }
+        interaction.reply({
+            embeds: [ viewConfig(interaction.user, interaction.guild) ]
+        }).catch(log4js.trace)
+    }
+    if (cmd === 'informations') {
+        const key = options.getString('paramètre') as configKey
+        const info = getConfig(key)
+
+        interaction.reply({
+            embeds: [ configInfo(interaction.user, info) ]
+        }).catch(log4js.trace)
+    }
     if (cmd === 'configurer') {
         const key = options.getString('paramètre') as configKey;
         const config = getConfig(key);
@@ -273,6 +322,65 @@ export default new AmethystCommand({
                     ]
                 })
                 .catch(log4js.trace);
-        } //TODO Finish config command
+        } else if (config.type === 'role') {
+            const msg = await interaction.reply({
+                fetchReply: true,
+                embeds: [ classic(interaction.user, { question: true }).setTitle("Configuration").setDescription(`Quel est le rôle que vous voulez utiliser pour configurer **${config.name}** ?\nRépondez dans le chat par un nom, un identifiant ou une mention\nRépondez par \`cancel\` pour annuler`) ]
+            }).catch(log4js.trace) as Message<true>
+            const role = await GetRole.process({
+                message: msg,
+                user: interaction.user,
+                allowCancel: true
+            }).catch(log4js.trace)
+
+            if (!role || role === "time's up" || role === 'cancel') return interaction.editReply({
+                embeds: [cancel()]
+            }).catch(log4js.trace)
+
+            configs.setConfig(interaction.guild.id, key, role.id);
+            interaction.editReply({
+                embeds: [ classic(interaction.user, { accentColor: true }).setTitle("Configuré").setDescription(`Le paramètre **${config.name}** a été configuré sur ${pingRole(role)}`) ]
+            }).catch(log4js.trace)
+        } else {
+            const meta = config as unknown as additionalChannelType
+            const channelSelect = new ChannelSelectMenuBuilder()
+            .setMaxValues(1)
+            .setCustomId('config-select-channel')
+
+            if (!!meta?.types) channelSelect.setChannelTypes(meta.types)
+            const msg = await interaction.reply({
+                embeds: [ classic(interaction.user, { question: true }).setTitle("Configuration").setDescription(`Sur quel salon voulez-vous configurer **${config.name}** ?`) ],
+                components: [row(channelSelect)],
+                fetchReply: true
+            }).catch(log4js.trace) as Message<true>;
+
+            if (!msg) return;
+            const rep = await waitForInteraction({
+                componentType: ComponentType.ChannelSelect,
+                user: interaction.user,
+                message: msg
+            }).catch(log4js.trace)
+
+            if (!rep) return interaction.editReply({
+                embeds: [ cancel() ],
+                components: []
+            }).catch(log4js.trace)
+            await interaction.editReply({
+                embeds: [ wait(interaction.user) ],
+                components: []
+            }).catch(log4js.trace);
+            const channel = interaction.guild.channels.cache.get(rep.values[0]) ?? await interaction.guild.channels.fetch(rep.values[0]).catch(log4js.trace)
+            if (!channel) return interaction.editReply({
+                embeds: [ channelNotFound(interaction.user) ]
+            }).catch(log4js.trace)
+            if (!!meta?.types && meta.types.length > 0 && !meta.types.includes(channel.type)) return interaction.editReply({
+                embeds: [ invalidChannelType(interaction.user, meta.types) ]
+            }).catch(log4js.trace)
+
+            configs.setConfig(interaction.guild.id, key, channel.id)
+            interaction.editReply({
+                embeds: [ classic(interaction.user, { accentColor: true }).setTitle("Configuré").setDescription(`Le paramètre **${config.name}** a été configuré sur ${pingChan(channel)}`) ]
+            }).catch(log4js.trace)
+        }
     }
 });

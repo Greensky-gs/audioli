@@ -369,10 +369,10 @@ discord-api-types@^0.37.37, discord-api-types@^0.37.41:
   resolved "https://registry.yarnpkg.com/discord-api-types/-/discord-api-types-0.37.50.tgz#6059eb8c0b784ad8194655a8b8b7f540fcfac428"
   integrity sha512-X4CDiMnDbA3s3RaUXWXmgAIbY1uxab3fqe3qwzg5XutR3wjqi7M3IkgQbsIBzpqBN2YWr/Qdv7JrFRqSgb4TFg==
 
-discord-player@^6.6.1:
-  version "6.6.1"
-  resolved "https://registry.yarnpkg.com/discord-player/-/discord-player-6.6.1.tgz#ae2179ecb31c8c7d12b5ad0a11f8d0cb68cae9c5"
-  integrity sha512-l72ql51uya3Uq5VrTPvR6xWBHOa3lI9oWTl7YDDHvofMXEYLgqAuDlyuelQ7AY+lUC7FOK7MoS2QgVFHeAciNw==
+discord-player@^6.6.2:
+  version "6.6.2"
+  resolved "https://registry.yarnpkg.com/discord-player/-/discord-player-6.6.2.tgz#2e82b28f5098f9eef3570aeaa7bdefd518b098bb"
+  integrity sha512-+hX+6r6K/kQZ0Ip8vxWpIC3zMZDdUFvlc4pqytO4LcGFrcqRM/Mba59o/fWP34tp4H3bB3wDo5LpKQfsKCjsPg==
   dependencies:
     "@discord-player/equalizer" "^0.2.2"
     "@discord-player/ffmpeg" "^0.1.0"

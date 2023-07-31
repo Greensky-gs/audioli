@@ -17,3 +17,4 @@ export type config<Config extends configKey> = {
 };
 export type additionalCustomStringType = { states: { name: string; description: string; value: string }[] };
 export type additionalNumberType = { max: number | null; min: number | null };
+export type additionalChannelType = { types: number[] };
