@@ -137,7 +137,7 @@ export default new AmethystCommand({
                 ? DJPermLevel.Admin
                 : DJPermLevel.everyone;
 
-        if (permLevel >= userPermLevel && (permLevel === userPermLevel ? permLevel !== DJPermLevel.Owner : true)) {
+        if (permLevel >= userPermLevel && (permLevel === userPermLevel ? permLevel !== DJPermLevel.Owner : true) && initiated.id !== interaction.user.id) {
             return interaction
                 .reply({
                     embeds: [notADJ(interaction.user)],
