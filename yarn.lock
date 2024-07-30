@@ -137,9 +137,9 @@
     ws "^8.16.0"
 
 "@distube/ytdl-core@^4.11.17":
-  version "4.13.5"
-  resolved "https://registry.yarnpkg.com/@distube/ytdl-core/-/ytdl-core-4.13.5.tgz#f9bacaa43225953d0ccd2a682a31d9dbbc378973"
-  integrity sha512-g+4UJIR/auAJbia7iB0aWvaJDbs22P53NySWa47b1NT4xMTDJYguxHFArPrvRkcJrb/AgKjv/XoSZGghpL0CJA==
+  version "4.13.7"
+  resolved "https://registry.yarnpkg.com/@distube/ytdl-core/-/ytdl-core-4.13.7.tgz#4b48e009eb8df6ea21623c18999a4dd76d893fbf"
+  integrity sha512-xpovwZVPwQ0R4Mrwt/fhh1rqmBjiZ5qj30ck5kz+mQJ5XPzW9dUiTDz89qCxO3YvgbCAqaC5BNNnWiFC2uCV5Q==
   dependencies:
     http-cookie-agent "^6.0.5"
     m3u8stream "^0.8.6"
@@ -361,9 +361,9 @@ debug@4:
     ms "2.1.2"
 
 debug@^4.3.4:
-  version "4.3.5"
-  resolved "https://registry.yarnpkg.com/debug/-/debug-4.3.5.tgz#e83444eceb9fedd4a1da56d671ae2446a01a6e1e"
-  integrity sha512-pt0bNEmneDIvdL1Xsd9oDQ/wrQRkXDT4AUWlNZNPKvW5x/jyO9VFXkJUP07vQ2upmw5PlaITaPKc31jK13V+jg==
+  version "4.3.6"
+  resolved "https://registry.yarnpkg.com/debug/-/debug-4.3.6.tgz#2ab2c38fbaffebf8aa95fdfe6d88438c7a13c52b"
+  integrity sha512-O/09Bd4Z1fBrU4VzkhFqVgpPzaGbw6Sm9FEkBT1A/YBXQFGuuSxa1dN2nxgxS34JmKXqYx8CZAwEVoJFImUXIg==
   dependencies:
     ms "2.1.2"
 
@@ -1118,10 +1118,15 @@ undici@6.13.0:
   resolved "https://registry.yarnpkg.com/undici/-/undici-6.13.0.tgz#7edbf4b7f3aac5f8a681d515151bf55cb3589d72"
   integrity sha512-Q2rtqmZWrbP8nePMq7mOJIN98M0fYvSgV89vwl/BQRT4mDOeY2GXZngfGpcBBhtky3woM7G24wZV3Q304Bv6cw==
 
-undici@^6.11.1, undici@^6.17.0, undici@^6.19.2:
+undici@^6.11.1, undici@^6.17.0:
   version "6.19.2"
   resolved "https://registry.yarnpkg.com/undici/-/undici-6.19.2.tgz#231bc5de78d0dafb6260cf454b294576c2f3cd31"
   integrity sha512-JfjKqIauur3Q6biAtHJ564e3bWa8VvT+7cSiOJHFbX4Erv6CLGDpg8z+Fmg/1OI/47RA+GI2QZaF48SSaLvyBA==
+
+undici@^6.19.2:
+  version "6.19.4"
+  resolved "https://registry.yarnpkg.com/undici/-/undici-6.19.4.tgz#5ec3b191699a1678ee0aa9ed14e443a682d0f7a8"
+  integrity sha512-i3uaEUwNdkRq2qtTRRJb13moW5HWqviu7Vl7oYRYz++uPtGHJj+x7TGjcEuwS5Mt2P4nA0U9dhIX3DdB6JGY0g==
 
 unfetch@^5.0.0:
   version "5.0.0"
