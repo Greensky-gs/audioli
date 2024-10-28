@@ -137,11 +137,11 @@
     ws "^8.16.0"
 
 "@distube/ytdl-core@^4.11.17":
-  version "4.14.4"
-  resolved "https://registry.yarnpkg.com/@distube/ytdl-core/-/ytdl-core-4.14.4.tgz#6ecb7e70f6eea691a562ccb7920d5d334b383d0f"
-  integrity sha512-dHb4GW3qATIjRsS6VIhm3Pop7FdUcDFhsnyQlsPeXW7UhTPuNS0BmraKiTpFbpp0Ky+rxBQjJBfPRFsM+dT1fg==
+  version "4.15.0"
+  resolved "https://registry.yarnpkg.com/@distube/ytdl-core/-/ytdl-core-4.15.0.tgz#234c04006040ee2c0cc27157fbcaff1c82125740"
+  integrity sha512-NOb8yMEhMWxDbRVnSDkJAHvwqUQSRCKYvA0Ly65zPDrV98WkY/Ks60118EiNV8iUxqN+P9gGXnGhE8Unl7NNOg==
   dependencies:
-    http-cookie-agent "^6.0.5"
+    http-cookie-agent "^6.0.6"
     m3u8stream "^0.8.6"
     miniget "^4.2.3"
     sax "^1.4.1"
@@ -359,11 +359,11 @@ debug@4:
     ms "2.1.2"
 
 debug@^4.3.4:
-  version "4.3.6"
-  resolved "https://registry.yarnpkg.com/debug/-/debug-4.3.6.tgz#2ab2c38fbaffebf8aa95fdfe6d88438c7a13c52b"
-  integrity sha512-O/09Bd4Z1fBrU4VzkhFqVgpPzaGbw6Sm9FEkBT1A/YBXQFGuuSxa1dN2nxgxS34JmKXqYx8CZAwEVoJFImUXIg==
+  version "4.3.7"
+  resolved "https://registry.yarnpkg.com/debug/-/debug-4.3.7.tgz#87945b4151a011d76d95a198d7111c865c360a52"
+  integrity sha512-Er2nc/H7RrMXZBFCEim6TCmMk02Z8vLC2Rbi1KEBggpo0fS6l0S1nnapwmIi3yW/+GOJap1Krg4w0Hg80oCqgQ==
   dependencies:
-    ms "2.1.2"
+    ms "^2.1.3"
 
 delegates@^1.0.0:
   version "1.0.0"
@@ -596,10 +596,10 @@ himalaya@~1.1.0:
   resolved "https://registry.yarnpkg.com/himalaya/-/himalaya-1.1.0.tgz#31724ae9d35714cd7c6f4be94888953f3604606a"
   integrity sha512-LLase1dHCRMel68/HZTFft0N0wti0epHr3nNY7ynpLbyZpmrKMQ8YIpiOV77TM97cNpC8Wb2n6f66IRggwdWPw==
 
-http-cookie-agent@^6.0.5:
-  version "6.0.5"
-  resolved "https://registry.yarnpkg.com/http-cookie-agent/-/http-cookie-agent-6.0.5.tgz#23b490439464424a689d80ea7f3a560a4a893ab8"
-  integrity sha512-sfZ8fDgDP3B1YB+teqSnAK1aPgBu8reUUGxSsndP2XnYN6cM29EURXWXZqQQiaRdor3B4QjpkUNfv21syaO4DA==
+http-cookie-agent@^6.0.6:
+  version "6.0.6"
+  resolved "https://registry.yarnpkg.com/http-cookie-agent/-/http-cookie-agent-6.0.6.tgz#4d37848c045ea8e6fced1b97d3cda282f06e1a27"
+  integrity sha512-XkwhYUWo0yhiHBWqLmAe2kIBymVY70ewi9sKmy6YBHpNU3BCH4nipKrtY5/effAxj0qneQ9ziZG5TXgaKLfYgg==
   dependencies:
     agent-base "^7.1.1"
 
