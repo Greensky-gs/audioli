@@ -137,9 +137,9 @@
     ws "^8.16.0"
 
 "@distube/ytdl-core@^4.11.17":
-  version "4.15.0"
-  resolved "https://registry.yarnpkg.com/@distube/ytdl-core/-/ytdl-core-4.15.0.tgz#234c04006040ee2c0cc27157fbcaff1c82125740"
-  integrity sha512-NOb8yMEhMWxDbRVnSDkJAHvwqUQSRCKYvA0Ly65zPDrV98WkY/Ks60118EiNV8iUxqN+P9gGXnGhE8Unl7NNOg==
+  version "4.15.1"
+  resolved "https://registry.yarnpkg.com/@distube/ytdl-core/-/ytdl-core-4.15.1.tgz#56b0df16ebc7764735b3058b95e679850a906df8"
+  integrity sha512-10voV+ixUVQgam4/GMhjNTX/ipk9odkPnPoRaUESs5E/EW0JujwPDc815z53D86mSRlVc8esH1eiuzFnxLJKcA==
   dependencies:
     http-cookie-agent "^6.0.6"
     m3u8stream "^0.8.6"
