@@ -4,7 +4,7 @@
   "main": "dist/index.js",
   "license": "MIT",
   "dependencies": {
-    "@discord-player/extractor": "^4.4.0",
+    "@discord-player/extractor": "^7.0.0",
     "@discordjs/opus": "^0.9.0",
     "@distube/ytdl-core": "^4.11.17",
     "@types/mysql": "^2.15.21",
