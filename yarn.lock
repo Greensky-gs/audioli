@@ -135,9 +135,9 @@
     ws "^8.17.0"
 
 "@distube/ytdl-core@^4.11.17":
-  version "4.15.8"
-  resolved "https://registry.yarnpkg.com/@distube/ytdl-core/-/ytdl-core-4.15.8.tgz#3516a1b80eba05d6c24ddd9df427ee9a816b9da4"
-  integrity sha512-yuQr8KDKuusXmaNNAw+stsRu6nmJUPy9hL6IgPm/8ei1zixfQFZpAIflXsqDrdXIaSp4hzTmQ1Z0KYhuqF2/JQ==
+  version "4.15.9"
+  resolved "https://registry.yarnpkg.com/@distube/ytdl-core/-/ytdl-core-4.15.9.tgz#378e0ef246ef753b4f7fca27d04a9b642242a794"
+  integrity sha512-8rFL1NAMsYz4t7Ryaz09Ld7VgoBurGB0KECG8BpTR2vikN0gD1VVusdfZqTYK/gp7uj/TbTJBa85oMCiVXvxcA==
   dependencies:
     http-cookie-agent "^6.0.8"
     https-proxy-agent "^7.0.6"
@@ -1794,9 +1794,9 @@ undici@^6.17.0:
   integrity sha512-q/1rj5D0/zayJB2FraXdaWxbhWiNKDvu8naDT2dl1yTlvJp4BLtOcp2a5BvgGNQpYYJzau7tf1WgKv3b+7mqpQ==
 
 undici@five:
-  version "5.28.4"
-  resolved "https://registry.yarnpkg.com/undici/-/undici-5.28.4.tgz#6b280408edb6a1a604a9b20340f45b422e373068"
-  integrity sha512-72RFADWFqKmUb2hmmvNODKL3p9hcB6Gt2DOQMis1SEBaV6a4MH8soBvzg+95CYhCKPFedut2JY9bMfrDl9D23g==
+  version "5.28.5"
+  resolved "https://registry.yarnpkg.com/undici/-/undici-5.28.5.tgz#b2b94b6bf8f1d919bc5a6f31f2c01deb02e54d4b"
+  integrity sha512-zICwjrDrcrUE0pyyJc1I2QzBkLM8FINsgOrt6WjA+BgajVq9Nxu2PbFFXUrAggLfDXlZGZBVZYw7WNV5KiBiBA==
   dependencies:
     "@fastify/busboy" "^2.0.0"
 
